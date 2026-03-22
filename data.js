@@ -234,47 +234,49 @@ const QS = {
   // ─── 🖼️ ЗАГАДКИ (пользовательские картинки) ───
   riddles: [
     {
-      id:'rd1', img:'images/riddle1.jpg', fb:'🖼️',
+      id:'rd1', img:'riddle1.jpg', fb:'🖼️',
       q:{ru:'Что изображено на этой картинке?', en:'What is shown in this picture?'},
       type:'choice',
-      opts:{ru:['Мыло','Груша','Апельсин','Банан'], en:['Apple','Pear','Orange','Banana']},
+      opts:{ru:['Яблоко','Груша','Апельсин','Банан'], en:['Apple','Pear','Orange','Banana']},
       ai:0,
-      ans:{ru:'Мыло', en:'green'},
+      ans:{ru:'Яблоко', en:'Apple'},
+      fact:{ru:'Яблоко содержит больше витамина C, чем апельсин, если сравнивать на 100г!', en:'Apples contain more vitamin C than oranges per 100g!'}
     },
     {
-      id:'rd2', img:'images/riddle2.jpg', fb:'🖼️',
+      id:'rd2', img:'riddle2.jpg', fb:'🖼️',
       q:{ru:'Кто изображён на картинке?', en:'Who is shown in the picture?'},
       type:'choice',
       opts:{ru:['Кошка','Собака','Кролик','Хомяк'], en:['Cat','Dog','Rabbit','Hamster']},
       ai:1,
-      ans:{ru:'Утро', en:'morning'},
+      ans:{ru:'Собака', en:'Dog'},
+      fact:{ru:'Собаки — лучшие друзья человека уже более 15 000 лет!', en:'Dogs have been human\'s best friends for over 15,000 years!'}
     },
     {
-      id:'rd3', img:'images/riddle3.jpg', fb:'🖼️',
+      id:'rd3', img:'riddle3.jpg', fb:'🖼️',
       q:{ru:'Что это?', en:'What is this?'},
       type:'choice',
       opts:{ru:['Гора','Море','Лес','Поле'], en:['Mountain','Sea','Forest','Field']},
       ai:2,
-      ans:{ru:'Елка', en:'Forest'},
-   
+      ans:{ru:'Лес', en:'Forest'},
+      fact:{ru:'Леса покрывают около 31% поверхности суши на Земле.', en:'Forests cover about 31% of Earth\'s land surface.'}
     },
     {
-      id:'rd4', img:'images/riddle4.jpg', fb:'🖼️',
+      id:'rd4', img:'riddle4.jpg', fb:'🖼️',
       q:{ru:'Угадай, что на картинке!', en:'Guess what\'s in the picture!'},
       type:'choice',
       opts:{ru:['Самолёт','Ракета','Вертолёт','Воздушный шар'], en:['Airplane','Rocket','Helicopter','Hot air balloon']},
       ai:0,
-      ans:{ru:'Соль', en:'Airplane'},
-   
+      ans:{ru:'Самолёт', en:'Airplane'},
+      fact:{ru:'Первый самолёт братьев Райт пролетел всего 36 метров в 1903 году!', en:'The Wright brothers\' first flight was only 36 meters long in 1903!'}
     },
     {
-      id:'rd5', img:'images/riddle5.jpg', fb:'🖼️',
+      id:'rd5', img:'riddle5.jpg', fb:'🖼️',
       q:{ru:'Что изображено?', en:'What is depicted?'},
       type:'choice',
       opts:{ru:['Планета','Звезда','Комета','Луна'], en:['Planet','Star','Comet','Moon']},
       ai:3,
-      ans:{ru:'Лес', en:'Moon'},
-  
+      ans:{ru:'Луна', en:'Moon'},
+      fact:{ru:'Луна удаляется от Земли на 3.8 см каждый год!', en:'The Moon moves away from Earth by 3.8 cm every year!'}
     }
   ],
 
@@ -596,41 +598,41 @@ const QS = {
   // ─── ➕ МАТЕМАТИКА ───
   math: [
     {
-      id:'mt1', img:'images/math1.jpg', fb:'➕',
-      q:{ru:'Реши задачу на картинке!\n(📂 Замени images/math1.jpg своей задачей)',
-         en:'Solve the problem in the picture!\n(📂 Replace images/math1.jpg)'},
+      id:'mt1', img:'math1.jpg', fb:'➕',
+      q:{ru:'Реши задачу на картинке!\n(📂 Замени math1.jpg своей задачей)',
+         en:'Solve the problem in the picture!\n(📂 Replace math1.jpg)'},
       type:'text',
-      ans:{ru:'4', en:'4'},
-      altAns:{ru:['5'], en:['5']},
+      ans:{ru:'12', en:'12'},
+      altAns:{ru:['12'], en:['12']},
       fact:{ru:'Математика — язык Вселенной! Умение считать поможет тебе везде.', en:'Math is the language of the Universe! Being able to count will help you everywhere.'}
     },
     {
-      id:'mt2', img:'images/math2.jpg', fb:'➕',
-      q:{ru:'Найди ответ!\n(📂 Замени images/math2.jpg)', en:'Find the answer!\n(📂 Replace images/math2.jpg)'},
+      id:'mt2', img:'math2.jpg', fb:'➕',
+      q:{ru:'Найди ответ!\n(📂 Замени math2.jpg)', en:'Find the answer!\n(📂 Replace math2.jpg)'},
       type:'text',
-      ans:{ru:'12', en:'12'},
+      ans:{ru:'25', en:'25'},
       altAns:{ru:['25'], en:['25']},
       fact:{ru:'25 = 5 × 5. Это "квадратное" число! Таких чисел много: 1, 4, 9, 16, 25...', en:'25 = 5 × 5. It\'s a "square" number! There are many: 1, 4, 9, 16, 25...'}
     },
     {
-      id:'mt3', img:'images/math3.jpg', fb:'➕',
-      q:{ru:'Реши задачу!\n(📂 Замени images/math3.jpg)', en:'Solve it!\n(📂 Replace images/math3.jpg)'},
+      id:'mt3', img:'math3.jpg', fb:'➕',
+      q:{ru:'Реши задачу!\n(📂 Замени math3.jpg)', en:'Solve it!\n(📂 Replace math3.jpg)'},
       type:'text',
       ans:{ru:'7', en:'7'},
       altAns:{ru:['7'], en:['7']},
       fact:{ru:'Число 7 считается самым "счастливым" во многих культурах мира!', en:'The number 7 is considered the "luckiest" number in many world cultures!'}
     },
     {
-      id:'mt4', img:'images/math4.jpg', fb:'➕',
-      q:{ru:'Какой ответ?\n(📂 Замени images/math4.jpg)', en:'What\'s the answer?\n(📂 Replace images/math4.jpg)'},
+      id:'mt4', img:'math4.jpg', fb:'➕',
+      q:{ru:'Какой ответ?\n(📂 Замени math4.jpg)', en:'What\'s the answer?\n(📂 Replace math4.jpg)'},
       type:'text',
       ans:{ru:'100', en:'100'},
       altAns:{ru:['100'], en:['100']},
       fact:{ru:'100 = 10 × 10. В десятичной системе счёта 100 — это "круглое" число!', en:'100 = 10 × 10. In the decimal system, 100 is a round number!'}
     },
     {
-      id:'mt5', img:'images/math5.jpg', fb:'➕',
-      q:{ru:'Найди число!\n(📂 Замени images/math5.jpg)', en:'Find the number!\n(📂 Replace images/math5.jpg)'},
+      id:'mt5', img:'math5.jpg', fb:'➕',
+      q:{ru:'Найди число!\n(📂 Замени math5.jpg)', en:'Find the number!\n(📂 Replace math5.jpg)'},
       type:'text',
       ans:{ru:'36', en:'36'},
       altAns:{ru:['36'], en:['36']},
