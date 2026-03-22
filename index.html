@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Загадкино 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<canvas id="ccanvas"></canvas>
+<div class="toast" id="toast"></div>
+<div class="app">
+
+<!-- ===== WELCOME ===== -->
+<div class="screen active" id="screen-welcome">
+  <div class="top-bar">
+    <div class="logo">🌟 <span id="wtitle">Загадкино</span></div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb0">EN</button>
+  </div>
+  <div class="s-body center-body">
+    <div class="hero">
+      <span class="hero-emoji">🧩</span>
+      <div class="hero-title" id="htitle">Загадкино</div>
+      <div class="hero-sub" id="hsub">Угадывай, думай, побеждай!</div>
+      <button class="btn btn-primary" onclick="go('register')" id="breg">Зарегистрироваться!</button>
+      <button class="btn btn-secondary" onclick="go('login')" id="blog">Уже есть аккаунт</button>
+      <div class="w-info" id="winfo">Данные хранятся в браузере 🔒</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div class="screen" id="screen-login">
+  <div class="top-bar">
+    <div class="logo">🌟 Загадкино</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb1">EN</button>
+  </div>
+  <div class="s-body s-body-pt">
+    <div class="form-card">
+      <div class="form-title" id="ltitle">Добро пожаловать!</div>
+      <div class="form-sub" id="lsub">Войди в свой аккаунт</div>
+      <input class="field" type="text" id="l-nick" placeholder="Никнейм"/>
+      <input class="field" type="password" id="l-pass" placeholder="Пароль"/>
+      <button class="btn btn-primary" onclick="doLogin()" id="bldo">Войти! 🚀</button>
+      <button class="btn btn-secondary" onclick="go('register')" id="blreg">Нет аккаунта? Зарегистрироваться</button>
+      <button class="btn btn-ghost" onclick="go('welcome')">← Назад</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REGISTER ===== -->
+<div class="screen" id="screen-register">
+  <div class="top-bar">
+    <div class="logo">🌟 Загадкино</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb2">EN</button>
+  </div>
+  <div class="s-body s-body-pt">
+    <div class="form-card">
+      <div class="form-title" id="rtitle">Новый игрок!</div>
+      <div class="form-sub" id="rsub">Выбери аватарку и придумай никнейм</div>
+      <div class="ava-row">
+        <div class="ava-item sel" onclick="selAva('girl')" id="ava-girl">
+          <div class="ava-circle" id="ac-girl"></div>
+          <div class="ava-lbl" id="albl-girl">👧 Девочка</div>
+        </div>
+        <div class="ava-item" onclick="selAva('boy')" id="ava-boy">
+          <div class="ava-circle" id="ac-boy"></div>
+          <div class="ava-lbl" id="albl-boy">👦 Мальчик</div>
+        </div>
+      </div>
+      <input class="field" type="text" id="r-nick" placeholder="Придумай никнейм" maxlength="16"/>
+      <input class="field" type="password" id="r-pass" placeholder="Пароль (запомни!)"/>
+      <input class="field" type="password" id="r-pass2" placeholder="Повтори пароль"/>
+      <button class="btn btn-primary" onclick="doRegister()" id="brdo">Создать аккаунт! 🎉</button>
+      <button class="btn btn-secondary" onclick="go('login')" id="brlog">Есть аккаунт? Войти</button>
+      <button class="btn btn-ghost" onclick="go('welcome')">← Назад</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="screen" id="screen-home">
+  <div class="top-bar">
+    <div class="logo">🌟 <span id="hlogo">Загадкино</span></div>
+    <div class="top-right">
+      <button class="lang-btn" onclick="toggleLang()" id="lb3">EN</button>
+      <div class="user-chip" id="home-chip">
+        <div class="user-chip-ava" id="home-ava"></div>
+        <div class="user-chip-name" id="home-uname">Игрок</div>
+      </div>
+    </div>
+  </div>
+  <div class="s-body">
+    <div class="sec-title" id="hcatttl">Выбери категорию</div>
+    <div class="cats-grid">
+      <div class="cat-card" onclick="openCat('riddles')">
+        <span class="cat-badge b-hot" id="bdhot">ТОП</span>
+        <span class="cat-ico">🖼️</span>
+        <div class="cat-name" id="cn1">Загадки</div>
+        <div class="cat-desc" id="cd1">Твои картинки · тест</div>
+      </div>
+      <div class="cat-card" onclick="openCat('cartoons')">
+        <span class="cat-badge b-new" id="bdnew">NEW</span>
+        <span class="cat-ico">📺</span>
+        <div class="cat-name" id="cn2">Мультики</div>
+        <div class="cat-desc" id="cd2">10 мультфильмов</div>
+      </div>
+      <div class="cat-card" onclick="openCat('logos')">
+        <span class="cat-ico">🏷️</span>
+        <div class="cat-name" id="cn3">Логотипы</div>
+        <div class="cat-desc" id="cd3">10 брендов</div>
+      </div>
+      <div class="cat-card" onclick="openCat('rebuses')">
+        <span class="cat-ico">🔣</span>
+        <div class="cat-name" id="cn4">Ребусы</div>
+        <div class="cat-desc" id="cd4">Картинки-загадки</div>
+      </div>
+      <div class="cat-card" onclick="openCat('logic')">
+        <span class="cat-ico">🧠</span>
+        <div class="cat-name" id="cn5">Логика</div>
+        <div class="cat-desc" id="cd5">Спички · задачи</div>
+      </div>
+      <div class="cat-card" onclick="openCat('math')">
+        <span class="cat-ico">➕</span>
+        <div class="cat-name" id="cn6">Математика</div>
+        <div class="cat-desc" id="cd6">Твои задачи</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="hs-solved">0</div><div class="stat-lbl" id="hs-sl">Решено</div></div>
+      <div class="stat-card"><div class="stat-num" id="hs-stars">0⭐</div><div class="stat-lbl" id="hs-stl">Очков</div></div>
+      <div class="stat-card"><div class="stat-num" id="hs-streak">0🔥</div><div class="stat-lbl" id="hs-skl">Серия</div></div>
+    </div>
+    <div class="lb-card">
+      <div class="lb-title">🏆 <span id="lbhtitle">Лучшие игроки</span></div>
+      <div id="lb-home"></div>
+    </div>
+  </div>
+  <div class="bot-nav">
+    <button class="nav-item active" onclick="showTab('home')" id="nav-h"><span class="nav-ico">🏠</span><span class="nav-lbl" id="nlh">Главная</span></button>
+    <button class="nav-item" onclick="showTab('lb')" id="nav-lb"><span class="nav-ico">🏆</span><span class="nav-lbl" id="nllb">Рейтинг</span></button>
+    <button class="nav-item" onclick="showTab('profile')" id="nav-pr"><span class="nav-ico">👤</span><span class="nav-lbl" id="nlpr">Профиль</span></button>
+  </div>
+</div>
+
+<!-- ===== CATEGORY LIST ===== -->
+<div class="screen" id="screen-cat">
+  <div class="top-bar">
+    <div class="logo" id="cat-top-title">Загадки</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb4">EN</button>
+  </div>
+  <div class="s-body">
+    <button class="back-btn" onclick="go('home')">← <span id="bk-lbl">На главную</span></button>
+    <div class="q-list" id="qlist"></div>
+  </div>
+</div>
+
+<!-- ===== QUESTION ===== -->
+<div class="screen" id="screen-question">
+  <div class="top-bar">
+    <div class="logo" id="q-top-cat">Загадки</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb5">EN</button>
+  </div>
+  <div class="s-body">
+    <div class="q-meta">
+      <div class="q-cat-lbl" id="qcl"></div>
+      <div class="q-prog-lbl" id="qpl"></div>
+    </div>
+    <div class="prog-bg"><div class="prog-fg" id="qpb" style="width:10%"></div></div>
+    <div class="q-img-wrap" id="qimgwrap"></div>
+    <div class="q-text" id="qtext"></div>
+    <div id="qanswers"></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div class="screen" id="screen-result">
+  <div class="top-bar">
+    <div class="logo">🌟 Загадкино</div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb6">EN</button>
+  </div>
+  <div class="s-body"><div id="result-content"></div></div>
+</div>
+
+<!-- ===== LEADERBOARD ===== -->
+<div class="screen" id="screen-lb">
+  <div class="top-bar">
+    <div class="logo">🏆 <span id="lb-ft">Рейтинг</span></div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb7">EN</button>
+  </div>
+  <div class="s-body"><div id="lb-full"></div></div>
+  <div class="bot-nav">
+    <button class="nav-item" onclick="showTab('home')"><span class="nav-ico">🏠</span><span class="nav-lbl">Главная</span></button>
+    <button class="nav-item active" onclick="showTab('lb')"><span class="nav-ico">🏆</span><span class="nav-lbl">Рейтинг</span></button>
+    <button class="nav-item" onclick="showTab('profile')"><span class="nav-ico">👤</span><span class="nav-lbl">Профиль</span></button>
+  </div>
+</div>
+
+<!-- ===== PROFILE ===== -->
+<div class="screen" id="screen-profile">
+  <div class="top-bar">
+    <div class="logo">👤 <span id="pr-ft">Профиль</span></div>
+    <button class="lang-btn" onclick="toggleLang()" id="lb8">EN</button>
+  </div>
+  <div class="s-body">
+    <div class="prof-hdr">
+      <div class="prof-ava" id="pr-ava"></div>
+      <div class="prof-name" id="pr-name"></div>
+      <div class="prof-lvl" id="pr-lvl"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="pr-sol">0</div><div class="stat-lbl" id="pr-soll">Решено</div></div>
+      <div class="stat-card"><div class="stat-num" id="pr-pts">0</div><div class="stat-lbl" id="pr-ptsl">Очков</div></div>
+      <div class="stat-card"><div class="stat-num" id="pr-pct">0%</div><div class="stat-lbl" id="pr-pctl">Верных</div></div>
+    </div>
+    <div id="pr-catstat"></div>
+    <button class="btn btn-secondary" onclick="doLogout()" id="b-logout" style="margin-top:10px">Выйти из аккаунта</button>
+  </div>
+  <div class="bot-nav">
+    <button class="nav-item" onclick="showTab('home')"><span class="nav-ico">🏠</span><span class="nav-lbl">Главная</span></button>
+    <button class="nav-item" onclick="showTab('lb')"><span class="nav-ico">🏆</span><span class="nav-lbl">Рейтинг</span></button>
+    <button class="nav-item active" onclick="showTab('profile')"><span class="nav-ico">👤</span><span class="nav-lbl">Профиль</span></button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
