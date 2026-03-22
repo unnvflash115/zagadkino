@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Загадкино 🌟</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -16,7 +16,9 @@
 <div class="screen active" id="screen-welcome">
   <div class="top-bar">
     <div class="logo">🌟 <span id="wtitle">Загадкино</span></div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb0">EN</button>
+    <button class="lang-btn" onclick="toggleLang()">
+      <span id="lb-welcome">EN</span>
+    </button>
   </div>
   <div class="s-body center-body">
     <div class="hero">
@@ -34,7 +36,7 @@
 <div class="screen" id="screen-login">
   <div class="top-bar">
     <div class="logo">🌟 Загадкино</div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb1">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-login">EN</span></button>
   </div>
   <div class="s-body s-body-pt">
     <div class="form-card">
@@ -53,7 +55,7 @@
 <div class="screen" id="screen-register">
   <div class="top-bar">
     <div class="logo">🌟 Загадкино</div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb2">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-register">EN</span></button>
   </div>
   <div class="s-body s-body-pt">
     <div class="form-card">
@@ -84,74 +86,99 @@
   <div class="top-bar">
     <div class="logo">🌟 <span id="hlogo">Загадкино</span></div>
     <div class="top-right">
-      <button class="lang-btn" onclick="toggleLang()" id="lb3">EN</button>
-      <div class="user-chip" id="home-chip">
+      <button class="lang-btn" onclick="toggleLang()"><span id="lb-home">EN</span></button>
+      <div class="user-chip" onclick="showTab('profile')" id="home-chip" title="Профиль">
         <div class="user-chip-ava" id="home-ava"></div>
         <div class="user-chip-name" id="home-uname">Игрок</div>
+        <span class="chip-arrow">›</span>
       </div>
     </div>
   </div>
-  <div class="s-body">
-    <div class="sec-title" id="hcatttl">Выбери категорию</div>
-    <div class="cats-grid">
-      <div class="cat-card" onclick="openCat('riddles')">
-        <span class="cat-badge b-hot" id="bdhot">ТОП</span>
-        <span class="cat-ico">🖼️</span>
-        <div class="cat-name" id="cn1">Загадки</div>
-        <div class="cat-desc" id="cd1">Твои картинки · тест</div>
+  <div class="app-layout">
+    <!-- Sidebar (PC only) -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" onclick="showTab('home')" id="snav-h">
+          <span class="snav-ico">🏠</span><span class="snav-lbl" id="snl-h">Главная</span>
+        </button>
+        <button class="sidebar-item" onclick="showTab('lb')" id="snav-lb">
+          <span class="snav-ico">🏆</span><span class="snav-lbl" id="snl-lb">Рейтинг</span>
+        </button>
+        <button class="sidebar-item" onclick="showTab('profile')" id="snav-pr">
+          <span class="snav-ico">👤</span><span class="snav-lbl" id="snl-pr">Профиль</span>
+        </button>
+      </nav>
+      <div class="sidebar-stats" id="sidebar-stats"></div>
+    </aside>
+
+    <main class="main-content">
+      <div class="s-body">
+        <div class="sec-title" id="hcatttl">Выбери категорию</div>
+        <div class="cats-grid">
+          <div class="cat-card" onclick="openCat('riddles')">
+            <span class="cat-badge b-hot" id="bdhot">ТОП</span>
+            <span class="cat-ico">🖼️</span>
+            <div class="cat-name" id="cn1">Загадки</div>
+            <div class="cat-desc" id="cd1">Угадай по картинке</div>
+          </div>
+          <div class="cat-card" onclick="openCat('cartoons')">
+            <span class="cat-badge b-new" id="bdnew">NEW</span>
+            <span class="cat-ico">📺</span>
+            <div class="cat-name" id="cn2">Мультики</div>
+            <div class="cat-desc" id="cd2">10 мультфильмов</div>
+          </div>
+          <div class="cat-card" onclick="openCat('logos')">
+            <span class="cat-ico">🏷️</span>
+            <div class="cat-name" id="cn3">Логотипы</div>
+            <div class="cat-desc" id="cd3">10 брендов</div>
+          </div>
+          <div class="cat-card" onclick="openCat('rebuses')">
+            <span class="cat-ico">🔣</span>
+            <div class="cat-name" id="cn4">Ребусы</div>
+            <div class="cat-desc" id="cd4">Картинки-загадки</div>
+          </div>
+          <div class="cat-card" onclick="openCat('logic')">
+            <span class="cat-ico">🧠</span>
+            <div class="cat-name" id="cn5">Логика</div>
+            <div class="cat-desc" id="cd5">Задачи на мышление</div>
+          </div>
+          <div class="cat-card" onclick="openCat('math')">
+            <span class="cat-ico">➕</span>
+            <div class="cat-name" id="cn6">Математика</div>
+            <div class="cat-desc" id="cd6">Числа и примеры</div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="hs-solved">0</div><div class="stat-lbl" id="hs-sl">Решено</div></div>
+          <div class="stat-card"><div class="stat-num" id="hs-stars">0⭐</div><div class="stat-lbl" id="hs-stl">Очков</div></div>
+          <div class="stat-card"><div class="stat-num" id="hs-streak">0🔥</div><div class="stat-lbl" id="hs-skl">Серия</div></div>
+        </div>
+
+        <div class="lb-card">
+          <div class="lb-title">🏆 <span id="lbhtitle">Лучшие игроки</span></div>
+          <div id="lb-home"></div>
+        </div>
       </div>
-      <div class="cat-card" onclick="openCat('cartoons')">
-        <span class="cat-badge b-new" id="bdnew">NEW</span>
-        <span class="cat-ico">📺</span>
-        <div class="cat-name" id="cn2">Мультики</div>
-        <div class="cat-desc" id="cd2">10 мультфильмов</div>
-      </div>
-      <div class="cat-card" onclick="openCat('logos')">
-        <span class="cat-ico">🏷️</span>
-        <div class="cat-name" id="cn3">Логотипы</div>
-        <div class="cat-desc" id="cd3">10 брендов</div>
-      </div>
-      <div class="cat-card" onclick="openCat('rebuses')">
-        <span class="cat-ico">🔣</span>
-        <div class="cat-name" id="cn4">Ребусы</div>
-        <div class="cat-desc" id="cd4">Картинки-загадки</div>
-      </div>
-      <div class="cat-card" onclick="openCat('logic')">
-        <span class="cat-ico">🧠</span>
-        <div class="cat-name" id="cn5">Логика</div>
-        <div class="cat-desc" id="cd5">Спички · задачи</div>
-      </div>
-      <div class="cat-card" onclick="openCat('math')">
-        <span class="cat-ico">➕</span>
-        <div class="cat-name" id="cn6">Математика</div>
-        <div class="cat-desc" id="cd6">Твои задачи</div>
-      </div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num" id="hs-solved">0</div><div class="stat-lbl" id="hs-sl">Решено</div></div>
-      <div class="stat-card"><div class="stat-num" id="hs-stars">0⭐</div><div class="stat-lbl" id="hs-stl">Очков</div></div>
-      <div class="stat-card"><div class="stat-num" id="hs-streak">0🔥</div><div class="stat-lbl" id="hs-skl">Серия</div></div>
-    </div>
-    <div class="lb-card">
-      <div class="lb-title">🏆 <span id="lbhtitle">Лучшие игроки</span></div>
-      <div id="lb-home"></div>
-    </div>
+    </main>
   </div>
-  <div class="bot-nav">
-    <button class="nav-item active" onclick="showTab('home')" id="nav-h"><span class="nav-ico">🏠</span><span class="nav-lbl" id="nlh">Главная</span></button>
-    <button class="nav-item" onclick="showTab('lb')" id="nav-lb"><span class="nav-ico">🏆</span><span class="nav-lbl" id="nllb">Рейтинг</span></button>
-    <button class="nav-item" onclick="showTab('profile')" id="nav-pr"><span class="nav-ico">👤</span><span class="nav-lbl" id="nlpr">Профиль</span></button>
+
+  <!-- Mobile bottom nav -->
+  <div class="bot-nav" id="home-botnav">
+    <button class="nav-item active" onclick="showTab('home')"><span class="nav-ico">🏠</span><span class="nav-lbl" id="nlh">Главная</span></button>
+    <button class="nav-item" onclick="showTab('lb')"><span class="nav-ico">🏆</span><span class="nav-lbl" id="nllb">Рейтинг</span></button>
+    <button class="nav-item" onclick="showTab('profile')"><span class="nav-ico">👤</span><span class="nav-lbl" id="nlpr">Профиль</span></button>
   </div>
 </div>
 
 <!-- ===== CATEGORY LIST ===== -->
 <div class="screen" id="screen-cat">
   <div class="top-bar">
+    <button class="back-btn-top" onclick="go('home')">← <span id="bk-lbl">Назад</span></button>
     <div class="logo" id="cat-top-title">Загадки</div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb4">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-cat">EN</span></button>
   </div>
   <div class="s-body">
-    <button class="back-btn" onclick="go('home')">← <span id="bk-lbl">На главную</span></button>
     <div class="q-list" id="qlist"></div>
   </div>
 </div>
@@ -159,8 +186,9 @@
 <!-- ===== QUESTION ===== -->
 <div class="screen" id="screen-question">
   <div class="top-bar">
+    <button class="back-btn-top" onclick="openCat(currentCat)">← <span id="bk-q">Назад</span></button>
     <div class="logo" id="q-top-cat">Загадки</div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb5">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-q">EN</span></button>
   </div>
   <div class="s-body">
     <div class="q-meta">
@@ -177,8 +205,9 @@
 <!-- ===== RESULT ===== -->
 <div class="screen" id="screen-result">
   <div class="top-bar">
+    <button class="back-btn-top" onclick="openCat(currentCat)">← <span id="bk-r">Назад</span></button>
     <div class="logo">🌟 Загадкино</div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb6">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-r">EN</span></button>
   </div>
   <div class="s-body"><div id="result-content"></div></div>
 </div>
@@ -186,8 +215,9 @@
 <!-- ===== LEADERBOARD ===== -->
 <div class="screen" id="screen-lb">
   <div class="top-bar">
+    <button class="back-btn-top" onclick="showTab('home')">← <span id="bk-lb">Назад</span></button>
     <div class="logo">🏆 <span id="lb-ft">Рейтинг</span></div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb7">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-lbs">EN</span></button>
   </div>
   <div class="s-body"><div id="lb-full"></div></div>
   <div class="bot-nav">
@@ -200,8 +230,9 @@
 <!-- ===== PROFILE ===== -->
 <div class="screen" id="screen-profile">
   <div class="top-bar">
+    <button class="back-btn-top" onclick="showTab('home')">← <span id="bk-pr">Назад</span></button>
     <div class="logo">👤 <span id="pr-ft">Профиль</span></div>
-    <button class="lang-btn" onclick="toggleLang()" id="lb8">EN</button>
+    <button class="lang-btn" onclick="toggleLang()"><span id="lb-pr">EN</span></button>
   </div>
   <div class="s-body">
     <div class="prof-hdr">
@@ -215,7 +246,7 @@
       <div class="stat-card"><div class="stat-num" id="pr-pct">0%</div><div class="stat-lbl" id="pr-pctl">Верных</div></div>
     </div>
     <div id="pr-catstat"></div>
-    <button class="btn btn-secondary" onclick="doLogout()" id="b-logout" style="margin-top:10px">Выйти из аккаунта</button>
+    <button class="btn btn-secondary" onclick="doLogout()" id="b-logout" style="margin-top:16px">Выйти из аккаунта</button>
   </div>
   <div class="bot-nav">
     <button class="nav-item" onclick="showTab('home')"><span class="nav-ico">🏠</span><span class="nav-lbl">Главная</span></button>
@@ -225,7 +256,6 @@
 </div>
 
 </div><!-- /app -->
-
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
