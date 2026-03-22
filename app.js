@@ -14,8 +14,6 @@ function saveUsers(u) { localStorage.setItem('zg_users', JSON.stringify(u)); }
 function saveSession(nick) { localStorage.setItem('zg_session', nick); }
 function loadSession() { return localStorage.getItem('zg_session'); }
 function clearSession() { localStorage.removeItem('zg_session'); }
-
-// ── Translation shortcut ─────────────────────────────
 function t(key) { return TR[lang][key] || key; }
 
 // ══════════════════════════════════════════════════════
@@ -23,15 +21,23 @@ function t(key) { return TR[lang][key] || key; }
 // ══════════════════════════════════════════════════════
 function go(screenName) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + screenName).classList.add('active');
+  const sc = document.getElementById('screen-' + screenName);
+  if (sc) sc.classList.add('active');
   window.scrollTo(0, 0);
   if (screenName === 'home') renderHome();
 }
 
 function showTab(tab) {
-  if (tab === 'home') { go('home'); return; }
-  if (tab === 'lb') { go('lb'); renderLeaderboard(); return; }
-  if (tab === 'profile') { go('profile'); renderProfile(); return; }
+  if (tab === 'home') { go('home'); updateSidebarActive('home'); return; }
+  if (tab === 'lb') { go('lb'); renderLeaderboard(); updateSidebarActive('lb'); return; }
+  if (tab === 'profile') { go('profile'); renderProfile(); updateSidebarActive('pr'); return; }
+}
+
+function updateSidebarActive(active) {
+  ['home','lb','pr'].forEach(id => {
+    const el = document.getElementById('snav-' + id);
+    if (el) el.classList.toggle('active', id === active);
+  });
 }
 
 // ══════════════════════════════════════════════════════
@@ -44,57 +50,57 @@ function toggleLang() {
 }
 
 function applyTranslations() {
-  const L = lang === 'ru' ? 'RU' : 'EN';
   const next = lang === 'ru' ? 'EN' : 'RU';
-  document.querySelectorAll('.lang-btn').forEach(b => b.textContent = next);
+  document.querySelectorAll('[id^="lb-"]').forEach(b => { if(b.tagName==='SPAN'||b.classList.contains('lang-btn')) b.textContent = next; });
+  document.querySelectorAll('span[id^="lb-"]').forEach(b => b.textContent = next);
 
-  // welcome
-  set('wtitle', t('welcome_title'));
-  set('htitle', t('welcome_title'));
-  set('hsub', t('hero_sub'));
-  set('winfo', t('winfo'));
-  set('breg', t('b_reg'));
-  set('blog', t('b_log'));
-  // login
-  set('ltitle', t('l_title'));
-  set('lsub', t('l_sub'));
-  set('bldo', t('l_do'));
-  set('blreg', t('l_to_reg'));
-  // register
-  set('rtitle', t('r_title'));
-  set('rsub', t('r_sub'));
-  set('brdo', t('r_do'));
-  set('brlog', t('r_to_log'));
-  set('albl-girl', t('av_girl'));
-  set('albl-boy', t('av_boy'));
-  // home
-  set('hlogo', t('welcome_title'));
-  set('hcatttl', t('h_cats'));
-  set('cn1', t('cn1')); set('cd1', t('cd1'));
-  set('cn2', t('cn2')); set('cd2', t('cd2'));
-  set('cn3', t('cn3')); set('cd3', t('cd3'));
-  set('cn4', t('cn4')); set('cd4', t('cd4'));
-  set('cn5', t('cn5')); set('cd5', t('cd5'));
-  set('cn6', t('cn6')); set('cd6', t('cd6'));
-  set('bdhot', t('bdhot')); set('bdnew', t('bdnew'));
-  set('hs-sl', t('hs_sol')); set('hs-stl', t('hs_st')); set('hs-skl', t('hs_sk'));
-  set('lbhtitle', t('lb_h'));
-  set('nlh', t('nav_h')); set('nllb', t('nav_lb')); set('nlpr', t('nav_pr'));
-  // misc
-  set('bk-lbl', t('bk'));
-  set('lb-ft', t('lb_ft'));
-  set('pr-ft', t('pr_ft'));
-  set('b-logout', t('b_logout'));
-  set('pr-soll', t('pr_sol')); set('pr-ptsl', t('pr_pts')); set('pr-pctl', t('pr_pct'));
+  setText('wtitle', t('welcome_title'));
+  setText('htitle', t('welcome_title'));
+  setText('hlogo', t('welcome_title'));
+  setText('hsub', t('hero_sub'));
+  setText('winfo', t('winfo'));
+  setText('breg', t('b_reg'));
+  setText('blog', t('b_log'));
+  setText('ltitle', t('l_title'));
+  setText('lsub', t('l_sub'));
+  setText('bldo', t('l_do'));
+  setText('blreg', t('l_to_reg'));
+  setText('rtitle', t('r_title'));
+  setText('rsub', t('r_sub'));
+  setText('brdo', t('r_do'));
+  setText('brlog', t('r_to_log'));
+  setText('albl-girl', t('av_girl'));
+  setText('albl-boy', t('av_boy'));
+  setText('hcatttl', t('h_cats'));
+  setText('cn1', t('cn1')); setText('cd1', t('cd1'));
+  setText('cn2', t('cn2')); setText('cd2', t('cd2'));
+  setText('cn3', t('cn3')); setText('cd3', t('cd3'));
+  setText('cn4', t('cn4')); setText('cd4', t('cd4'));
+  setText('cn5', t('cn5')); setText('cd5', t('cd5'));
+  setText('cn6', t('cn6')); setText('cd6', t('cd6'));
+  setText('bdhot', t('bdhot'));
+  setText('bdnew', t('bdnew'));
+  setText('hs-sl', t('hs_sol'));
+  setText('hs-stl', t('hs_st'));
+  setText('hs-skl', t('hs_sk'));
+  setText('lbhtitle', t('lb_h'));
+  setText('lb-ft', t('lb_ft'));
+  setText('nlh', t('nav_h'));
+  setText('nllb', t('nav_lb'));
+  setText('nlpr', t('nav_pr'));
+  setText('snl-h', t('nav_h'));
+  setText('snl-lb', t('nav_lb'));
+  setText('snl-pr', t('nav_pr'));
+  setText('pr-ft', t('pr_ft'));
+  setText('pr-soll', t('pr_sol'));
+  setText('pr-ptsl', t('pr_pts'));
+  setText('pr-pctl', t('pr_pct'));
+  setText('b-logout', t('b_logout'));
 
-  // re-render if visible
-  if (currentUser) {
-    refreshHomeStats();
-    renderLBHome();
-  }
+  if (currentUser) { refreshHomeStats(); renderLBHome(); }
 }
 
-function set(id, val) {
+function setText(id, val) {
   const el = document.getElementById(id);
   if (el) el.textContent = val;
 }
@@ -112,17 +118,14 @@ function doRegister() {
   const nick = document.getElementById('r-nick').value.trim();
   const pass = document.getElementById('r-pass').value;
   const pass2 = document.getElementById('r-pass2').value;
-  if (!nick) { showToast('Введи никнейм!'); return; }
-  if (nick.length < 2) { showToast('Никнейм слишком короткий!'); return; }
+  if (!nick || nick.length < 2) { showToast('Введи никнейм (мин. 2 символа)!'); return; }
   if (!pass) { showToast('Придумай пароль!'); return; }
   if (pass !== pass2) { showToast('Пароли не совпадают!'); return; }
   const users = getUsers();
-  if (users[nick.toLowerCase()]) { showToast('Такой никнейм занят!'); return; }
+  if (users[nick.toLowerCase()]) { showToast('Такой никнейм уже занят!'); return; }
   const newUser = {
-    nick, ava: selectedAva,
-    hash: btoa(pass),
-    points: 0, solved: 0, attempts: 0, streak: 0,
-    progress: {} // { catId: { done: Set as array } }
+    nick, ava: selectedAva, hash: btoa(unescape(encodeURIComponent(pass))),
+    points: 0, solved: 0, attempts: 0, streak: 0, progress: {}
   };
   users[nick.toLowerCase()] = newUser;
   saveUsers(users);
@@ -139,7 +142,7 @@ function doLogin() {
   const users = getUsers();
   const u = users[nick.toLowerCase()];
   if (!u) { showToast('Пользователь не найден!'); return; }
-  if (u.hash !== btoa(pass)) { showToast('Неверный пароль!'); return; }
+  if (u.hash !== btoa(unescape(encodeURIComponent(pass)))) { showToast('Неверный пароль!'); return; }
   currentUser = u;
   saveSession(nick.toLowerCase());
   go('home');
@@ -164,31 +167,49 @@ function saveCurrentUser() {
 // ══════════════════════════════════════════════════════
 function renderHome() {
   if (!currentUser) return;
-  // avatar
   document.getElementById('home-ava').innerHTML = AVA[currentUser.ava];
-  document.getElementById('home-uname').textContent = currentUser.nick;
+  setText('home-uname', currentUser.nick);
   refreshHomeStats();
   renderLBHome();
+  renderSidebarStats();
 }
 
 function refreshHomeStats() {
   if (!currentUser) return;
-  set('hs-solved', currentUser.solved || 0);
-  set('hs-stars', (currentUser.points || 0) + '⭐');
-  set('hs-streak', (currentUser.streak || 0) + '🔥');
+  setText('hs-solved', currentUser.solved || 0);
+  setText('hs-stars', (currentUser.points || 0) + ' ⭐');
+  setText('hs-streak', (currentUser.streak || 0) + ' 🔥');
+}
+
+function renderSidebarStats() {
+  if (!currentUser) return;
+  const el = document.getElementById('sidebar-stats');
+  if (!el) return;
+  const pts = currentUser.points || 0;
+  const lvls = t('lvls');
+  const lvlIdx = Math.min(Math.floor(pts / 50), lvls.length - 1);
+  el.innerHTML = `
+    <div style="text-align:center">
+      <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;margin:0 auto 8px;background:var(--card2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center">
+        ${AVA[currentUser.ava]}
+      </div>
+      <div style="font-weight:bold;font-size:14px;margin-bottom:2px">${currentUser.nick}</div>
+      <div style="font-size:12px;color:var(--muted)">${lvls[lvlIdx]}</div>
+      <div style="margin-top:8px;font-size:13px;color:var(--yellow);font-weight:bold">${pts} ⭐</div>
+    </div>`;
 }
 
 function renderLBHome() {
   const users = getUsers();
-  const sorted = Object.values(users).sort((a, b) => (b.points || 0) - (a.points || 0)).slice(0, 5);
-  const medals = ['m1', 'm2', 'm3', 'mn', 'mn'];
-  const nums = ['🥇', '🥈', '🥉', '4', '5'];
-  document.getElementById('lb-home').innerHTML = sorted.map((u, i) => `
+  const sorted = Object.values(users).sort((a,b)=>(b.points||0)-(a.points||0)).slice(0,5);
+  const medals = ['m1','m2','m3','mn','mn'];
+  const nums = ['🥇','🥈','🥉','4','5'];
+  document.getElementById('lb-home').innerHTML = sorted.map((u,i) => `
     <div class="lb-row">
       <div class="lb-medal ${medals[i]}">${nums[i]}</div>
-      <div class="lb-ava">${AVA[u.ava] || '⭐'}</div>
+      <div class="lb-ava">${AVA[u.ava]||'⭐'}</div>
       <div class="lb-name">${u.nick}</div>
-      <div class="lb-score">${u.points || 0} ⭐</div>
+      <div class="lb-score">${u.points||0} ⭐</div>
     </div>`).join('');
 }
 
@@ -197,18 +218,18 @@ function renderLBHome() {
 // ══════════════════════════════════════════════════════
 function renderLeaderboard() {
   const users = getUsers();
-  const sorted = Object.values(users).sort((a, b) => (b.points || 0) - (a.points || 0));
-  const medals = ['m1', 'm2', 'm3'];
-  const nums = ['🥇', '🥈', '🥉'];
+  const sorted = Object.values(users).sort((a,b)=>(b.points||0)-(a.points||0));
+  const medals = ['m1','m2','m3'];
+  const nums = ['🥇','🥈','🥉'];
   document.getElementById('lb-full').innerHTML = `
     <div class="lb-card">
       <div class="lb-title">🏆 ${t('lb_h')}</div>
-      ${sorted.map((u, i) => `
-        <div class="lb-row ${u.nick === currentUser?.nick ? 'done' : ''}">
-          <div class="lb-medal ${medals[i] || 'mn'}">${nums[i] || (i + 1)}</div>
-          <div class="lb-ava">${AVA[u.ava] || '⭐'}</div>
-          <div class="lb-name">${u.nick}${u.nick === currentUser?.nick ? ' 👈' : ''}</div>
-          <div class="lb-score">${u.points || 0} ⭐</div>
+      ${sorted.map((u,i) => `
+        <div class="lb-row ${u.nick===currentUser?.nick?'done':''}">
+          <div class="lb-medal ${medals[i]||'mn'}">${nums[i]||(i+1)}</div>
+          <div class="lb-ava">${AVA[u.ava]||'⭐'}</div>
+          <div class="lb-name">${u.nick}${u.nick===currentUser?.nick?' 👈':''}</div>
+          <div class="lb-score">${u.points||0} ⭐</div>
         </div>`).join('')}
     </div>`;
 }
@@ -219,28 +240,24 @@ function renderLeaderboard() {
 function renderProfile() {
   if (!currentUser) return;
   document.getElementById('pr-ava').innerHTML = AVA[currentUser.ava];
-  set('pr-name', currentUser.nick);
-
+  setText('pr-name', currentUser.nick);
   const pts = currentUser.points || 0;
   const lvls = t('lvls');
-  let lvlIdx = Math.min(Math.floor(pts / 50), lvls.length - 1);
-  set('pr-lvl', lvls[lvlIdx] + ' · ' + pts + ' ⭐');
-
-  set('pr-sol', currentUser.solved || 0);
-  set('pr-pts', pts);
+  const lvlIdx = Math.min(Math.floor(pts/50), lvls.length-1);
+  setText('pr-lvl', lvls[lvlIdx] + ' · ' + pts + ' ⭐');
+  setText('pr-sol', currentUser.solved || 0);
+  setText('pr-pts', pts);
   const pct = currentUser.attempts > 0
-    ? Math.round((currentUser.solved / currentUser.attempts) * 100)
-    : 0;
-  set('pr-pct', pct + '%');
+    ? Math.round((currentUser.solved/currentUser.attempts)*100) : 0;
+  setText('pr-pct', pct + '%');
 
-  // cat progress
   const prog = currentUser.progress || {};
   const cats = t('cats');
   let html = `<div class="cat-stat-card"><div class="cat-stat-title">📊 ${t('cat_prog')}</div>`;
   Object.keys(QS).forEach(catId => {
     const total = QS[catId].length;
     const done = prog[catId] ? prog[catId].length : 0;
-    const pct2 = Math.round((done / total) * 100);
+    const pct2 = Math.round((done/total)*100);
     html += `
       <div class="cat-prog-row">
         <div class="cat-prog-lbl">${cats[catId]}</div>
@@ -258,19 +275,19 @@ function renderProfile() {
 function openCat(catId) {
   currentCat = catId;
   const cats = t('cats');
-  set('cat-top-title', cats[catId]);
-  const prog = (currentUser?.progress || {})[catId] || [];
+  setText('cat-top-title', cats[catId]);
+  const prog = (currentUser?.progress||{})[catId] || [];
   const questions = QS[catId];
-  document.getElementById('qlist').innerHTML = questions.map((q, i) => {
+  document.getElementById('qlist').innerHTML = questions.map((q,i) => {
     const done = prog.includes(q.id);
     const qText = q.q ? q.q[lang] : '—';
-    const short = qText.split('\n')[0].slice(0, 50) + (qText.length > 50 ? '…' : '');
+    const short = qText.split('\n')[0].slice(0,55) + (qText.length>55?'…':'');
     return `
-      <div class="q-item ${done ? 'done' : ''}" onclick="startQuestion('${catId}', ${i})">
-        <div class="q-num">${done ? '✓' : (i + 1)}</div>
+      <div class="q-item ${done?'done':''}" onclick="startQuestion('${catId}',${i})">
+        <div class="q-num">${done?'✓':(i+1)}</div>
         <div class="q-txt">
           <div class="q-ttl">${short}</div>
-          <div class="q-stl">${done ? '✅ ' + t('ok_title').replace('! 🎉','') : '⏳ ' + t('hint')}</div>
+          <div class="q-stl">${done?'✅ Решено':'⏳ '+t('hint')}</div>
         </div>
         <div class="q-arr">›</div>
       </div>`;
@@ -294,34 +311,34 @@ function renderQuestion() {
   const total = QS[currentCat].length;
   const cats = t('cats');
 
-  set('q-top-cat', cats[currentCat]);
-  set('qcl', cats[currentCat]);
-  set('qpl', t('q_n') + ' ' + (currentQIdx + 1) + ' ' + t('q_of') + ' ' + total);
-  document.getElementById('qpb').style.width = Math.round(((currentQIdx + 1) / total) * 100) + '%';
+  setText('q-top-cat', cats[currentCat]);
+  setText('qcl', cats[currentCat]);
+  setText('qpl', t('q_n') + ' ' + (currentQIdx+1) + ' ' + t('q_of') + ' ' + total);
+  document.getElementById('qpb').style.width = Math.round(((currentQIdx+1)/total)*100)+'%';
 
-  // image or SVG
+  // Image/SVG
   const imgWrap = document.getElementById('qimgwrap');
   if (q.img) {
     imgWrap.innerHTML = `<img class="q-img" src="${q.img}" alt="question"
-      onerror="this.parentNode.innerHTML='<div class=q-img-ph><span class=big>${q.fb}</span><span class=hint>📂 Добавь картинку в папку images/</span></div>'"
+      onerror="this.parentNode.innerHTML='<div class=q-img-ph><span class=big>${q.fb}</span></div>'"
     />`;
   } else if (q.svgKey) {
-    const svgSrc = REBUS_SVG[q.svgKey] || MATCH_SVG[q.svgKey];
-    imgWrap.innerHTML = `<div class="q-svg-wrap">${svgSrc || ''}</div>`;
+    let svgSrc = '';
+    if (q.svgSrc === 'riddle') svgSrc = RIDDLE_SVG[q.svgKey] || '';
+    else if (q.svgSrc === 'math') svgSrc = MATH_SVG[q.svgKey] || '';
+    else svgSrc = REBUS_SVG[q.svgKey] || MATCH_SVG[q.svgKey] || '';
+    imgWrap.innerHTML = `<div class="q-svg-wrap">${svgSrc}</div>`;
   } else {
     imgWrap.innerHTML = `<div class="q-img-ph"><span class="big">${q.fb}</span></div>`;
   }
 
-  set('qtext', q.q[lang]);
+  setText('qtext', q.q[lang]);
 
-  // answers
   const ansDiv = document.getElementById('qanswers');
   if (q.type === 'choice') {
     const opts = q.opts[lang];
     ansDiv.innerHTML = `<div class="opts4">${
-      opts.map((o, i) =>
-        `<button class="opt-btn" onclick="checkChoice(${i})" id="opt${i}">${o}</button>`
-      ).join('')
+      opts.map((o,i)=>`<button class="opt-btn" onclick="checkChoice(${i})" id="opt${i}">${o}</button>`).join('')
     }</div>`;
   } else {
     ansDiv.innerHTML = `
@@ -329,9 +346,10 @@ function renderQuestion() {
         <input type="text" id="txt-input" placeholder="${t('ans_ph')}" autocomplete="off"/>
         <button onclick="checkText()">→</button>
       </div>`;
-    document.getElementById('txt-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') checkText();
-    });
+    setTimeout(()=>{
+      const inp = document.getElementById('txt-input');
+      if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') checkText(); });
+    }, 50);
   }
 }
 
@@ -341,16 +359,13 @@ function checkChoice(idx) {
   const q = QS[currentCat][currentQIdx];
   const correct = q.ai;
   const isOk = idx === correct;
-
-  // highlight
-  q.opts[lang].forEach((_, i) => {
-    const btn = document.getElementById('opt' + i);
-    if (i === correct) btn.classList.add('ok');
-    else if (i === idx && !isOk) btn.classList.add('no');
+  q.opts[lang].forEach((_,i) => {
+    const btn = document.getElementById('opt'+i);
+    if(i===correct) btn.classList.add('ok');
+    else if(i===idx&&!isOk) btn.classList.add('no');
     btn.disabled = true;
   });
-
-  setTimeout(() => showResult(isOk, q), 700);
+  setTimeout(()=>showResult(isOk,q), 600);
 }
 
 function checkText() {
@@ -362,10 +377,10 @@ function checkText() {
   answered = true;
   const q = QS[currentCat][currentQIdx];
   const correct = q.ans[lang].toLowerCase();
-  const alts = (q.altAns?.[lang] || []).map(a => a.toLowerCase());
-  const isOk = val === correct || alts.includes(val);
+  const alts = (q.altAns?.[lang]||[]).map(a=>a.toLowerCase());
+  const isOk = val===correct || alts.includes(val);
   input.disabled = true;
-  setTimeout(() => showResult(isOk, q), 300);
+  setTimeout(()=>showResult(isOk,q), 300);
 }
 
 // ══════════════════════════════════════════════════════
@@ -373,19 +388,14 @@ function checkText() {
 // ══════════════════════════════════════════════════════
 function showResult(isOk, q) {
   if (!currentUser) return;
-
-  // update user stats
-  currentUser.attempts = (currentUser.attempts || 0) + 1;
+  currentUser.attempts = (currentUser.attempts||0)+1;
   if (isOk) {
-    currentUser.points = (currentUser.points || 0) + 10;
-    currentUser.solved = (currentUser.solved || 0) + 1;
-    currentUser.streak = (currentUser.streak || 0) + 1;
-    // mark done
-    if (!currentUser.progress) currentUser.progress = {};
-    if (!currentUser.progress[currentCat]) currentUser.progress[currentCat] = [];
-    if (!currentUser.progress[currentCat].includes(q.id)) {
-      currentUser.progress[currentCat].push(q.id);
-    }
+    currentUser.points = (currentUser.points||0)+10;
+    currentUser.solved = (currentUser.solved||0)+1;
+    currentUser.streak = (currentUser.streak||0)+1;
+    if (!currentUser.progress) currentUser.progress={};
+    if (!currentUser.progress[currentCat]) currentUser.progress[currentCat]=[];
+    if (!currentUser.progress[currentCat].includes(q.id)) currentUser.progress[currentCat].push(q.id);
     saveCurrentUser();
     launchConfetti();
   } else {
@@ -393,32 +403,27 @@ function showResult(isOk, q) {
     saveCurrentUser();
   }
 
-  const isLast = currentQIdx >= QS[currentCat].length - 1;
+  const isLast = currentQIdx >= QS[currentCat].length-1;
   const nextBtn = isLast
     ? `<button class="btn btn-success" onclick="openCat('${currentCat}')">${t('btn_fin')}</button>`
-    : `<button class="btn btn-primary" onclick="startQuestion('${currentCat}', ${currentQIdx + 1})">${t('btn_next')}</button>`;
+    : `<button class="btn btn-primary" onclick="startQuestion('${currentCat}',${currentQIdx+1})">${t('btn_next')}</button>`;
 
   const wrongBlock = !isOk
-    ? `<div class="wrong-ans">✅ ${t('ans_lbl')}<strong>${q.ans[lang]}</strong></div>`
-    : '';
-
+    ? `<div class="wrong-ans">✅ ${t('ans_lbl')}<strong>${q.ans[lang]}</strong></div>` : '';
   const factBlock = q.fact
-    ? `<div class="fact-box"><div class="fact-lbl">${t('fact_lbl')}</div><div class="fact-txt">${q.fact[lang]}</div></div>`
-    : '';
+    ? `<div class="fact-box"><div class="fact-lbl">${t('fact_lbl')}</div><div class="fact-txt">${q.fact[lang]}</div></div>` : '';
 
   document.getElementById('result-content').innerHTML = `
-    <div class="res-box ${isOk ? 'ok' : 'no'}">
-      <div class="res-emoji">${isOk ? '🎉🌟✨' : '😅💪🎯'}</div>
-      <div class="res-title ${isOk ? 'ok' : 'no'}">${isOk ? t('ok_title') : t('no_title')}</div>
-      <div class="res-sub">${isOk ? t('ok_sub') : t('no_sub')}</div>
-      ${isOk ? `<div class="pts-badge">${t('pts')}</div>` : ''}
+    <div class="res-box ${isOk?'ok':'no'}">
+      <div class="res-emoji">${isOk?'🎉🌟✨':'😅💪🎯'}</div>
+      <div class="res-title ${isOk?'ok':'no'}">${isOk?t('ok_title'):t('no_title')}</div>
+      <div class="res-sub">${isOk?t('ok_sub'):t('no_sub')}</div>
+      ${isOk?`<div class="pts-badge">${t('pts')}</div>`:''}
     </div>
     ${wrongBlock}
     ${factBlock}
     ${nextBtn}
-    <button class="btn btn-secondary" onclick="openCat('${currentCat}')">← ${t('bk')}</button>
   `;
-
   go('result');
 }
 
@@ -430,45 +435,41 @@ function launchConfetti() {
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   const pieces = [];
-  const colors = ['#7c3aed','#ec4899','#f59e0b','#22c55e','#38bdf8','#f472b6','#a78bfa'];
-  for (let i = 0; i < 120; i++) {
+  const colors = ['#a78bfa','#f472b6','#fbbf24','#34d399','#60a5fa','#f87171'];
+  for (let i=0; i<130; i++) {
     pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 6 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * 360,
-      rotV: (Math.random() - 0.5) * 8,
-      vy: Math.random() * 3 + 2,
-      vx: (Math.random() - 0.5) * 3,
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height - canvas.height,
+      w: Math.random()*10+5,
+      h: Math.random()*6+3,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      rotV: (Math.random()-.5)*8,
+      vy: Math.random()*3+2,
+      vx: (Math.random()-.5)*2.5,
       opacity: 1
     });
   }
-
   let frame = 0;
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     let alive = false;
     pieces.forEach(p => {
-      p.y += p.vy;
-      p.x += p.vx;
-      p.rot += p.rotV;
-      if (frame > 60) p.opacity -= 0.015;
-      if (p.y < canvas.height && p.opacity > 0) alive = true;
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.rotV;
+      if (frame>70) p.opacity-=0.012;
+      if (p.y<canvas.height&&p.opacity>0) alive=true;
       ctx.save();
-      ctx.globalAlpha = Math.max(0, p.opacity);
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.globalAlpha = Math.max(0,p.opacity);
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
       ctx.restore();
     });
     frame++;
     if (alive) requestAnimationFrame(draw);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
   }
   draw();
 }
@@ -477,32 +478,23 @@ function launchConfetti() {
 //  TOAST
 // ══════════════════════════════════════════════════════
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2600);
 }
 
 // ══════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════
 function init() {
-  // Render avatars in register form
   document.getElementById('ac-girl').innerHTML = AVA.girl;
   document.getElementById('ac-boy').innerHTML = AVA.boy;
-
-  // Apply translations
   applyTranslations();
-
-  // Check session
   const sess = loadSession();
   if (sess) {
     const users = getUsers();
-    if (users[sess]) {
-      currentUser = users[sess];
-      go('home');
-      return;
-    }
+    if (users[sess]) { currentUser = users[sess]; go('home'); return; }
   }
   go('welcome');
 }
