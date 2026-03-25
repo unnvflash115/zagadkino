@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F7F3EE">
+<title>AGRO PRO — Бурятия</title>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;AGRO PRO&quot;,&quot;short_name&quot;:&quot;AGROPRO&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#F7F3EE&quot;,&quot;theme_color&quot;:&quot;#1D1D1F&quot;}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
+<script type="module">
+  // 1. Импортируем нужные функции из CDN
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // 2. Ваши личные данные из консоли (те самые, что вы прислали)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCYKzZ6ZM0jG0ahsmlk92vQ9nD_xcYFEF8",
+    authDomain: "agroproject-5834a.firebaseapp.com",
+    projectId: "agroproject-5834a",
+    storageBucket: "agroproject-5834a.firebasestorage.app",
+    messagingSenderId: "253916521639",
+    appId: "1:253916521639:web:439479cdef254b11dfa782",
+    measurementId: "G-ZDHYMN8TTH"
+  };
+
+  // 3. Инициализация
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 4. Глобальная функция для отправки данных (чтобы работала из любой части сайта)
+  window.sendDataToFirebase = async function(collectionName, data) {
+    try {
+      const docRef = await addDoc(collection(db, collectionName), data);
+      console.log("Документ добавлен! ID:", docRef.id);
+      return docRef.id;
+    } catch (e) {
+      console.error("Ошибка при отправке в Firebase: ", e);
+    }
+  }
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F7F3EE;
+  --card:#FFFFFF;
+  --card2:#FAF7F2;
+  --border:#E2D9CE;
+  --border2:#C8BFB4;
+  --text:#111111;
+  --text2:#3D3530;
+  --text3:#7A6E65;
+  --black:#1D1D1F;
+  --red:#D93025;
+  --amber:#9E6B0A;
+  --green:#1A6B3C;
+  --redbg:#FDE8E8;
+  --amberbg:#FDF3DC;
+  --greenbg:#E4F4EC;
+  --blue:#1555A8;
+  --bluebg:#E6EEFF;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.12);
+}
+body.dark{
+  --bg:#0F0E0D;
+  --card:#1A1917;
+  --card2:#211F1D;
+  --border:#2E2B28;
+  --border2:#3D3A36;
+  --text:#F2EDE8;
+  --text2:#C4BCB4;
+  --text3:#7A7168;
+  --redbg:#3D1A1A;
+  --amberbg:#3D2E0A;
+  --greenbg:#0E2E1A;
+  --bluebg:#0E1E3D;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .35s,color .35s;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.anim-up{animation:fadeUp .35s cubic-bezier(.16,1,.3,1) both}
+.anim-up-2{animation:fadeUp .35s .08s cubic-bezier(.16,1,.3,1) both}
+.anim-up-3{animation:fadeUp .35s .16s cubic-bezier(.16,1,.3,1) both}
+.anim-up-4{animation:fadeUp .35s .24s cubic-bezier(.16,1,.3,1) both}
+.anim-pop{animation:popIn .25s cubic-bezier(.16,1,.3,1) both}
+
+.page{display:none}
+.page.active{display:block;animation:fadeUp .3s cubic-bezier(.16,1,.3,1)}
+
+/* ── WRAP ── */
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+@media(max-width:700px){.wrap{padding:0 16px}}
+
+/* ── NAVBAR ── */
+.navbar{position:sticky;top:0;z-index:300;background:rgba(247,243,238,.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:background .35s,border-color .35s}
+body.dark .navbar{background:rgba(15,14,13,.94)}
+.navbar-inner{max-width:1160px;margin:0 auto;padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+@media(max-width:700px){.navbar-inner{padding:0 16px;height:52px}}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:34px;height:34px;border-radius:10px;background:var(--black);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:transform .2s}
+.logo:hover .logo-icon{transform:scale(1.08)}
+.logo-text{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.logo-text span{font-weight:400;color:var(--text3)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-back{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer;padding:7px 14px;border-radius:980px;border:1px solid var(--border);background:var(--card);transition:all .2s;white-space:nowrap}
+.nav-back:hover{background:var(--card2);border-color:var(--border2)}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--border2);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all .2s;flex-shrink:0;color:var(--text)}
+.icon-btn:hover{background:var(--card2);border-color:var(--black);transform:scale(1.05)}
+.notif-badge{position:absolute;top:-3px;right:-3px;width:17px;height:17px;background:var(--red);border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff}
+.avatar-btn{width:38px;height:38px;border-radius:50%;background:var(--black);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;cursor:pointer;flex-shrink:0;transition:all .2s;position:relative}
+.avatar-btn:hover{transform:scale(1.05);border-color:var(--black)}
+
+/* ── DROPDOWNS ── */
+.dd-wrap{position:relative}
+.dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--card);border:1.5px solid var(--black);border-radius:16px;overflow:hidden;z-index:400;box-shadow:var(--shadow-lg)}
+.dropdown.open{display:block;animation:slideDown .2s cubic-bezier(.16,1,.3,1)}
+.notif-dd-box{width:310px}
+.dd-hdr{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.dd-hdr-title{font-size:14px;font-weight:600}
+.dd-hdr-sub{font-size:11px;color:var(--text3)}
+.notif-item{display:flex;gap:10px;align-items:flex-start;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.notif-item:hover{background:var(--card2)}
+.notif-item:last-child{border-bottom:none}
+.n-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.n-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.n-msg{font-size:12px;color:var(--text2);line-height:1.4}
+.n-time{font-size:10px;color:var(--text3);margin-top:3px}
+.dd-footer{padding:10px 18px;border-top:1px solid var(--border)}
+.dd-more-btn{width:100%;padding:9px;border-radius:980px;border:1.5px solid var(--border2);background:var(--card);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.dd-more-btn:hover{background:var(--card2)}
+.profile-dd-box{width:240px}
+.profile-user{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.profile-av{width:36px;height:36px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;flex-shrink:0}
+.profile-name{font-size:13px;font-weight:600}
+.profile-email{font-size:11px;color:var(--text3)}
+.profile-menu{padding:6px 0}
+.p-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:background .12s}
+.p-item:hover{background:var(--card2)}
+.p-item span{font-size:14px;color:var(--text)}
+.p-item.danger span{color:var(--red)}
+.p-divider{height:1px;background:var(--border);margin:4px 0}
+
+/* ── AUTH ── */
+#auth-page{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center}
+.auth-bg{position:absolute;inset:0;overflow:hidden}
+.auth-bg img{width:100%;height:100%;object-fit:cover}
+.auth-bg-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.auth-box{position:relative;background:var(--card);border:1.5px solid var(--border2);border-radius:24px;width:420px;max-width:92vw;overflow:hidden;animation:popIn .4s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow-lg)}
+.auth-hdr{background:#FFFFFF;padding:28px 32px 22px;position:relative;overflow:hidden;text-align:center;border-bottom:1px solid var(--border)}
+.auth-hdr::after{content:'🐄';position:absolute;right:-8px;bottom:-16px;font-size:80px;opacity:.07;line-height:1}
+.auth-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.auth-logo-ico{width:40px;height:40px;border-radius:12px;background:#1D1D1F;display:flex;align-items:center;justify-content:center;font-size:20px}
+.auth-logo-txt{font-size:20px;font-weight:700;color:#1D1D1F;letter-spacing:-.3px}
+.auth-logo-txt span{font-weight:400;color:#7A6E65}
+.auth-title{font-size:19px;font-weight:600;color:#1D1D1F;margin-bottom:4px}
+.auth-sub{font-size:13px;color:#7A6E65}
+.auth-tabs{display:flex;background:#FFFFFF;border-bottom:1px solid var(--border)}
+.auth-tab{flex:1;padding:13px;text-align:center;font-size:14px;cursor:pointer;color:var(--text3);background:#FFFFFF;border:none;border-bottom:2px solid transparent;font-family:'Inter',sans-serif;transition:all .15s}
+.auth-tab.active{font-weight:600;color:#1D1D1F;border-bottom-color:#1D1D1F}
+.auth-body{padding:24px 28px 22px;background:#FFFFFF}
+.f-lbl{font-size:10px;font-weight:600;color:var(--text2);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px;margin-top:14px;display:block}
+.f-lbl:first-child{margin-top:0}
+.f-inp{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid #E2D9CE;background:#F7F3EE;color:#111;font-size:14px;font-family:'Inter',sans-serif;transition:border-color .15s;box-sizing:border-box}
+.f-inp:focus{outline:none;border-color:#1D1D1F}
+.forgot-row{text-align:right;margin-top:5px}
+.forgot-row a{font-size:12px;color:var(--text3);cursor:pointer}
+.auth-btn{width:100%;padding:13px;border-radius:980px;border:1.5px solid #1D1D1F;background:#1D1D1F;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:18px;transition:opacity .15s}
+.auth-btn:hover{opacity:.87}
+.auth-or{display:flex;align-items:center;gap:10px;margin:10px 0 4px}
+.auth-or-line{flex:1;height:1px;background:#E2D9CE}
+.auth-or span{font-size:12px;color:#7A6E65}
+.auth-guest{width:100%;padding:12px;border-radius:980px;border:1.5px solid #E2D9CE;background:#fff;color:#1D1D1F;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;box-sizing:border-box}
+.auth-guest:hover{background:#F7F3EE}
+.auth-err{background:#FDE8E8;color:#D93025;font-size:12px;padding:8px 12px;border-radius:8px;margin-top:10px;display:none}
+
+/* ── HOME ── */
+.hero{position:relative;border-radius:22px;overflow:hidden;height:440px;display:flex;align-items:flex-end;background:#8B6914;margin-bottom:32px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.08) 55%,transparent 100%)}
+.hero-content{position:relative;padding:44px;width:100%}
+.hero h1{font-size:46px;font-weight:700;color:#000000;margin:0 0 12px;letter-spacing:-1.5px;line-height:1.05}
+.hero h1 span{font-weight:300;opacity: 0.7;}
+.hero-desc{font-size:16px;color:rgba(255,255,255,.75);max-width:500px;margin:0 0 28px;line-height:1.65}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero{padding:12px 26px;border-radius:980px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+.btn-hero-fill{background:#fff;color:#1D1D1F}
+.btn-hero-fill:hover{opacity:.9;transform:translateY(-1px)}
+.btn-hero-out{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+.btn-hero-out:hover{background:rgba(255,255,255,.1)}
+.sec-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.modules-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.modules-grid{grid-template-columns:1fr}.hero{height:300px}.hero h1{font-size:28px}}
+.mod-card{background:var(--card);border:1.5px solid var(--black);border-radius:20px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.mod-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.mod-hd{padding:24px 26px 20px;position:relative;overflow:hidden}
+.mod-hd::after{position:absolute;right:-12px;bottom:-14px;font-size:86px;opacity:.1;line-height:1}
+.m01 .mod-hd{background:#1a1a1a}.m01 .mod-hd::after{content:'🐄'}
+.m02 .mod-hd{background:#0a3d2e}.m02 .mod-hd::after{content:'💧'}
+.m03 .mod-hd{background:#2c1810}.m03 .mod-hd::after{content:'🌿'}
+.m04 .mod-hd{background:#1c1c3a}.m04 .mod-hd::after{content:'🎓'}
+.mod-num{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:.6;color:#fff}
+.mod-title{font-size:20px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.mod-body{padding:18px 26px 22px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.mod-desc{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:16px}
+.mod-footer{display:flex;align-items:center;justify-content:space-between}
+.mod-tags{display:flex;gap:6px;flex-wrap:wrap}
+.mod-tag{font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:980px;padding:3px 10px;color:var(--text2)}
+.mod-link{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;transition:gap .2s}
+
+/* ── PAGE HEADER ── */
+.page-hdr{border:1.5px solid var(--black);border-radius:20px;padding:26px 30px;margin-bottom:22px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.page-hdr::after{position:absolute;right:-10px;bottom:-18px;font-size:110px;opacity:.07;line-height:1}
+.ph01{background:#1a1a1a}.ph01::after{content:'🐄'}
+.ph02{background:#0a3d2e}.ph02::after{content:'💧'}
+.ph03{background:#2c1810}.ph03::after{content:'🌿'}
+.ph04{background:#1c1c3a}.ph04::after{content:'🎓'}
+.ph-mod{font-size:10px;font-weight:600;color:#666;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.ph-title{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.ph-sub{font-size:13px;color:rgba(255,255,255,.45);margin-top:3px}
+
+/* ── KPI ── */
+.kpi-row{display:grid;gap:12px;margin-bottom:22px}
+.k3{grid-template-columns:repeat(3,1fr)}
+.k4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:700px){.k3,.k4{grid-template-columns:1fr 1fr}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;transition:all .3s}
+.kpi-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;font-weight:600}
+.kpi-val{font-size:30px;font-weight:700;letter-spacing:-1px;color:var(--text)}
+.kpi-unit{font-size:15px;font-weight:400;color:var(--text3)}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
+.card-hd{padding:15px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:15px;font-weight:600;color:var(--text)}
+.card-sub{font-size:12px;color:var(--text3)}
+
+/* ── BUTTONS ── */
+.btn-primary{padding:10px 22px;border-radius:980px;border:none;background:var(--black);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-secondary{padding:10px 22px;border-radius:980px;border:1.5px solid var(--border2);background:var(--card);color:var(--text);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-secondary:hover{background:var(--card2);border-color:var(--black)}
+.btn-dashed{border:1.5px dashed var(--border2);border-radius:10px;padding:12px;text-align:center;font-size:13px;color:var(--text3);cursor:pointer;margin:10px;transition:all .2s}
+.btn-dashed:hover{border-color:var(--black);color:var(--text);background:var(--card2)}
+.btn-full{width:100%;padding:11px;border-radius:980px;border:1.5px solid var(--border2);background:var(--card);color:var(--text);font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-full:hover{background:var(--card2);border-color:var(--black)}
+.btn-save{width:100%;padding:11px;border-radius:980px;border:none;background:var(--black);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s}
+.btn-save:hover{opacity:.85}
+.btn-cancel{padding:11px;border-radius:980px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* ── BADGES ── */
+.b-ok{background:var(--greenbg);color:var(--green);font-size:10px;font-weight:600;padding:3px 10px;border-radius:980px;white-space:nowrap}
+.b-warn{background:var(--amberbg);color:var(--amber);font-size:10px;font-weight:600;padding:3px 10px;border-radius:980px;white-space:nowrap}
+.b-sick{background:var(--redbg);color:var(--red);font-size:10px;font-weight:600;padding:3px 10px;border-radius:980px;white-space:nowrap}
+
+/* ── ANIMAL LIST ── */
+.a-row{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.a-row:hover{background:var(--card2)}
+.a-row:last-child{border-bottom:none}
+.a-emoji{font-size:26px;flex-shrink:0}
+.a-name{font-size:14px;font-weight:500;color:var(--text)}
+.a-breed{font-size:11px;color:var(--text3)}
+
+/* ── DETAIL ── */
+.det-hdr{background:var(--card);border:1.5px solid var(--black);border-radius:20px;padding:26px 30px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.det-emoji{font-size:56px;line-height:1;margin-right:16px;flex-shrink:0}
+.det-name{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:3px;color:var(--text)}
+.det-breed{font-size:13px;color:var(--text3);margin-bottom:10px}
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.det-grid{grid-template-columns:1fr}}
+.hist-item{display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);align-items:flex-start}
+.hist-item:last-child{border-bottom:none}
+.h-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.h-ico-r{background:var(--redbg)}.h-ico-b{background:var(--bluebg)}.h-ico-g{background:var(--greenbg)}.h-ico-a{background:var(--amberbg)}
+.h-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.h-sub{font-size:12px;color:var(--text2)}
+.h-date{font-size:10px;color:var(--text3);margin-top:3px}
+.vacc-row{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)}
+.vacc-row:last-child{border-bottom:none}
+.vacc-n{font-size:13px;font-weight:500;color:var(--text)}
+.vacc-d{font-size:11px;color:var(--text3)}
+
+/* ── EDIT ── */
+.edit-card{background:var(--card);border:1.5px solid var(--black);border-radius:16px;padding:20px 22px;animation:popIn .22s ease}
+.ef-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;font-weight:600}
+.ef-inp,.ef-sel,.ef-ta{width:100%;padding:10px 13px;border-radius:9px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;font-family:'Inter',sans-serif;transition:border-color .15s;box-sizing:border-box}
+.ef-inp:focus,.ef-sel:focus,.ef-ta:focus{outline:none;border-color:var(--black)}
+.ef-ta{resize:none;line-height:1.6}
+.ef-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.ef-actions{display:flex;gap:10px;margin-top:14px}
+.saved-badge{font-size:11px;color:var(--green);background:var(--greenbg);padding:3px 12px;border-radius:980px;font-weight:600;display:none;animation:popIn .2s}
+
+/* ── ADD ANIMAL MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center}
+.modal-bg.open{display:flex;animation:fadeIn .2s}
+.modal{background:var(--card);border:1.5px solid var(--black);border-radius:22px;padding:32px;width:460px;max-width:92vw;max-height:90vh;overflow-y:auto;animation:popIn .28s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow-lg)}
+.modal-title{font-size:20px;font-weight:700;margin-bottom:20px;color:var(--text)}
+.modal-title span{color:var(--text3)}
+.m-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.type-btn{padding:10px 4px;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);font-family:'Inter',sans-serif}
+.type-btn:hover,.type-btn.sel{border-color:var(--black);background:var(--card);color:var(--text)}
+.type-emoji{font-size:22px}
+.status-row{display:flex;gap:8px}
+.stat-btn{flex:1;padding:9px 4px;border:1.5px solid var(--border);border-radius:8px;font-size:11px;color:var(--text2);background:none;cursor:pointer;font-family:'Inter',sans-serif;text-align:center;transition:all .15s}
+.stat-btn.sel-ok{border-color:var(--green);color:var(--green);background:var(--greenbg)}
+.stat-btn.sel-warn{border-color:var(--amber);color:var(--amber);background:var(--amberbg)}
+.stat-btn.sel-sick{border-color:var(--red);color:var(--red);background:var(--redbg)}
+.m-actions{display:flex;gap:10px;margin-top:20px}
+
+/* ── WATER ── */
+.water-layout{display:grid;grid-template-columns:1fr 300px;gap:16px}
+@media(max-width:900px){.water-layout{grid-template-columns:1fr}}
+.crop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.crop-btn{padding:12px 4px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .15s;text-align:center}
+.crop-btn.sel,.crop-btn:hover{border-color:var(--black);background:var(--card2)}
+.crop-emoji{font-size:22px}
+.crop-name{font-size:10px;color:var(--text2);font-weight:500}
+.crop-btn.sel .crop-name{color:var(--text)}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px}
+.pill{padding:8px 16px;border-radius:980px;background:var(--card);border:1.5px solid var(--border);font-size:13px;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.pill.sel,.pill:hover{border-color:var(--black);color:var(--text);background:var(--card2)}
+.season-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.season-btn{padding:12px 4px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:12px;color:var(--text2);font-family:'Inter',sans-serif;transition:all .15s}
+.season-btn.sel,.season-btn:hover{border-color:var(--black);color:var(--text);background:var(--card2)}
+.s-emoji{font-size:20px}
+.calc-btn{width:100%;padding:14px;border-radius:980px;border:none;background:var(--black);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.calc-btn:hover{opacity:.85;transform:translateY(-1px)}
+.res-block{display:none;margin-top:22px;border:1.5px solid var(--black);border-radius:14px;overflow:hidden;animation:fadeUp .3s ease}
+.res-block.show{display:block}
+.res-top{background:var(--card2);padding:10px 18px;border-bottom:1px solid var(--border);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.res-nums{display:grid;grid-template-columns:repeat(3,1fr)}
+.r-n{padding:18px 14px;text-align:center;border-right:1px solid var(--border);background:var(--card)}
+.r-n:last-child{border-right:none}
+.r-val{font-size:24px;font-weight:700;margin-bottom:2px;color:var(--text)}
+.r-unit{font-size:11px;color:var(--text3)}
+.r-lbl{font-size:9px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+.eco-wrap{padding:14px 18px;background:var(--card);border-top:1px solid var(--border)}
+.eco-hd{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;color:var(--text2)}
+.eco-pct{font-weight:600;color:var(--green)}
+.eco-track{height:4px;background:var(--card2);border-radius:99px;overflow:hidden}
+.eco-fill{height:100%;background:#1A6B3C;border-radius:99px;transition:width 1.2s cubic-bezier(.16,1,.3,1);width:0}
+.w-side{display:flex;flex-direction:column;gap:14px}
+@media(max-width:900px){.w-side{display:none}}
+.sched-item{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)}
+.sched-item:last-child{border-bottom:none}
+.sched-crop{font-size:13px;font-weight:500;color:var(--text)}
+.sched-days{font-size:11px;color:var(--text3)}
+.sched-vol{font-size:13px;font-weight:600;color:var(--blue)}
+.green-card{background:var(--greenbg);border:1px solid #A8D4B8;border-radius:14px;padding:18px 20px}
+.gc-lbl{font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:8px}
+.gc-val{font-size:30px;font-weight:700;color:#0E4A28;margin-bottom:3px;letter-spacing:-1px}
+.gc-sub{font-size:12px;color:var(--green)}
+
+/* ── FARMPEDIA ── */
+.fp-layout{display:grid;grid-template-columns:280px 1fr;gap:18px}
+@media(max-width:900px){.fp-layout{grid-template-columns:1fr}}
+.fp-sidebar{display:flex;flex-direction:column;gap:8px}
+@media(max-width:900px){.fp-sidebar{display:none}}
+.fp-cat-btn{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card);font-size:14px;color:var(--text2);cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px}
+.fp-cat-btn:hover,.fp-cat-btn.sel{border-color:var(--black);background:var(--card2);color:var(--text);font-weight:500}
+.fp-search{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:14px;font-family:'Inter',sans-serif;margin-bottom:18px;transition:border-color .15s;box-sizing:border-box}
+.fp-search:focus{outline:none;border-color:var(--black)}
+/* Symptom finder */
+.symptom-finder{background:var(--card);border:1.5px solid var(--black);border-radius:16px;padding:22px;margin-bottom:22px;animation:fadeUp .3s ease}
+.sf-title{font-size:16px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.sf-sub{font-size:13px;color:var(--text3);margin-bottom:16px}
+.sf-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.sf-tag{padding:7px 14px;border-radius:980px;border:1.5px solid var(--border);background:var(--card2);font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.sf-tag.sel{border-color:var(--black);background:var(--black);color:#fff}
+.sf-results{margin-top:16px;display:none}
+.sf-results.show{display:block;animation:fadeUp .25s ease}
+.sf-res-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600}
+.sf-res-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.sf-res-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sf-res-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.sf-match{font-size:10px;color:var(--green);font-weight:600;margin-top:6px}
+
+.fp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:700px){.fp-grid{grid-template-columns:1fr}}
+.fp-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s}
+.fp-card:hover{border-color:var(--black);transform:translateY(-2px);box-shadow:var(--shadow)}
+.fp-ico{font-size:26px;margin-bottom:10px}
+.fp-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px}
+.fp-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.fp-badge{display:inline-block;font-size:10px;padding:2px 9px;border-radius:980px;margin-top:8px;font-weight:600}
+.fp-disease{background:var(--redbg);color:var(--red)}
+.fp-pest{background:var(--amberbg);color:var(--amber)}
+.fp-fert{background:var(--greenbg);color:var(--green)}
+.fp-crop{background:var(--bluebg);color:var(--blue)}
+.fp-animal{background:#F3E8FF;color:#6B21A8}
+
+/* ── LEARN ── */
+.learn-layout{display:grid;grid-template-columns:1fr 270px;gap:16px}
+@media(max-width:900px){.learn-layout{grid-template-columns:1fr}}
+.cr-row{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.cr-row:hover{background:var(--card2)}
+.cr-row:last-child{border-bottom:none}
+.cr-ico{width:44px;height:44px;background:var(--card2);border:1px solid var(--border);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.cr-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:7px}
+.cr-bar{height:3px;background:var(--card2);border-radius:99px;overflow:hidden;margin-bottom:5px}
+.cr-fill{height:100%;background:var(--black);border-radius:99px}
+.cr-pct{font-size:11px;color:var(--text3)}
+.cr-badge{font-size:9px;padding:3px 8px;border-radius:4px;font-weight:600;background:var(--greenbg);color:var(--green);letter-spacing:.5px}
+.quiz-hdr{background:var(--card2);padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.quiz-score{font-size:13px;font-weight:600;color:var(--amber)}
+.quiz-body{padding:20px}
+.quiz-q{font-size:14px;line-height:1.65;margin-bottom:16px;color:var(--text)}
+.qopt{padding:11px 16px;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text2);cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .15s;display:block;width:100%;margin-bottom:8px}
+.qopt:hover{border-color:var(--black);color:var(--text)}
+.qopt.correct{background:var(--greenbg);border-color:var(--green);color:var(--green)}
+.qopt.wrong{background:var(--redbg);border-color:var(--red);color:var(--red)}
+.ls-widget{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.ls-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:12px}
+.level-n{font-size:40px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:3px}
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ach{aspect-ratio:1;background:var(--card2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:16px;cursor:pointer;transition:all .15s}
+.ach.on{border-color:var(--green);background:var(--greenbg)}
+.ach-lbl{font-size:8px;color:var(--text3)}
+.ach.on .ach-lbl{color:var(--text2)}
+.cert-bar{height:3px;background:var(--card2);border-radius:99px;overflow:hidden;margin:10px 0 12px}
+.cert-fill{width:75%;height:100%;background:var(--amber);border-radius:99px}
+
+/* ── MOBILE ── */
+@media(max-width:700px){
+  .page-hdr{padding:18px 20px;flex-direction:column;align-items:flex-start}
+  .ph-title{font-size:22px}
+  .kpi{padding:14px 16px}.kpi-val{font-size:24px}
+  .hero-content{padding:24px}
+  .mod-body{padding:14px 18px 18px}
+  .det-hdr{flex-direction:column;align-items:flex-start}
+  .modal{padding:22px 18px}
+  .m-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ AUTH ════ -->
+<div id="auth-page">
+  <div class="auth-bg">
+    <img id="hero-bg-auth"
+      src="https://images.pexels.com/photos/2132250/pexels-photo-2132250.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      alt="поле Бурятия"
+    >
+    <div class="auth-bg-overlay"></div>
+  </div>
+  <div class="auth-box anim-pop">
+    <div class="auth-hdr">
+      <div class="auth-logo-row">
+        <div class="auth-logo-ico">🌾</div>
+        <div class="auth-logo-txt">AGRO <span>PRO</span></div>
+      </div>
+      <div class="auth-title">Добро пожаловать</div>
+      <div class="auth-sub">Цифровая платформа для фермеров Бурятии</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="t-in" onclick="authTab('in')">Войти</button>
+      <button class="auth-tab" id="t-up" onclick="authTab('up')">Регистрация</button>
+    </div>
+    <div class="auth-body">
+      <div id="form-in">
+        <label class="f-lbl">Email</label>
+        <input class="f-inp" id="a-email" type="email" placeholder="example@mail.ru">
+        <label class="f-lbl">Пароль</label>
+        <input class="f-inp" id="a-pass" type="password" placeholder="••••••••">
+        <div class="forgot-row"><a>Забыли пароль?</a></div>
+        <div class="auth-err" id="auth-err"></div>
+        <button class="auth-btn" onclick="doLogin()">Войти</button>
+      </div>
+      <div id="form-up" style="display:none">
+        <label class="f-lbl">Имя</label>
+        <input class="f-inp" id="a-name" type="text" placeholder="Айнур Саая">
+        <label class="f-lbl">Email</label>
+        <input class="f-inp" id="a-email2" type="email" placeholder="example@mail.ru">
+        <label class="f-lbl">Пароль</label>
+        <input class="f-inp" id="a-pass2" type="password" placeholder="••••••••">
+        <div class="auth-err" id="auth-err2"></div>
+        <button class="auth-btn" onclick="doRegister()">Создать аккаунт</button>
+      </div>
+      <div class="auth-or"><div class="auth-or-line"></div><span>или</span><div class="auth-or-line"></div></div>
+      <button class="auth-guest" onclick="enterGuest()">👁 Просто посмотреть</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="app" style="display:none">
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="logo" onclick="goPage('home')">
+        <div class="logo-icon">🌾</div>
+        <div class="logo-text">AGRO <span>PRO</span></div>
+      </a>
+      <div class="nav-right" id="nav-right"></div>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div id="p-home" class="page active">
+    <div class="wrap" style="padding:28px 28px 56px">
+      <div class="hero anim-up">
+        <img id="hero-img"
+          src="https://images.pexels.com/photos/2132250/pexels-photo-2132250.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+          alt="поле"
+          onerror="this.style.display='none'"
+        >
+        <div class="hero-grad"></div>
+        <div class="hero-content">
+          <h1>AGRO PRO <span>— всё хозяйство</span><br>в одном месте</h1>
+          <p class="hero-desc">Учёт животных, расчёт полива, справочник болезней и обучение агрономии для фермеров Республики Бурятия.</p>
+          <div class="hero-btns">
+            <button class="btn-hero btn-hero-fill" onclick="goPage('livestock')">Начать работу</button>
+            <button class="btn-hero btn-hero-out" onclick="scrollMods()">Смотреть модули</button>
+          </div>
+        </div>
+      </div>
+      <p id="mods-anchor" class="sec-title anim-up-2">Модули платформы</p>
+      <div class="modules-grid anim-up-3">
+        <div class="mod-card m01" onclick="goPage('livestock')">
+          <div class="mod-hd"><div class="mod-num">Module 01</div><div class="mod-title">LiveStock Pro</div></div>
+          <div class="mod-body"><p class="mod-desc">Учёт животных, история прививок, взвешивания и финансовый дашборд хозяйства Бурятии.</p><div class="mod-footer"><div class="mod-tags"><span class="mod-tag">Учёт</span><span class="mod-tag">Прививки</span></div><span class="mod-link">Открыть →</span></div></div>
+        </div>
+        <div class="mod-card m02" onclick="goPage('water')">
+          <div class="mod-hd"><div class="mod-num">Module 02</div><div class="mod-title">AgroWater</div></div>
+          <div class="mod-body"><p class="mod-desc">Расчёт нормы полива с учётом культуры, типа почвы, площади и сезона для климата Бурятии.</p><div class="mod-footer"><div class="mod-tags"><span class="mod-tag">Полив</span><span class="mod-tag">Климат</span></div><span class="mod-link">Открыть →</span></div></div>
+        </div>
+        <div class="mod-card m03" onclick="goPage('farmpedia')">
+          <div class="mod-hd"><div class="mod-num">Module 03</div><div class="mod-title">FarmPedia</div></div>
+          <div class="mod-body"><p class="mod-desc">Справочник болезней растений, животных, вредителей и удобрений для Забайкалья.</p><div class="mod-footer"><div class="mod-tags"><span class="mod-tag">Болезни</span><span class="mod-tag">Поиск</span></div><span class="mod-link">Открыть →</span></div></div>
+        </div>
+        <div class="mod-card m04" onclick="goPage('learn')">
+          <div class="mod-hd"><div class="mod-num">Module 04</div><div class="mod-title">AgroLearn</div></div>
+          <div class="mod-body"><p class="mod-desc">Курсы по агрономии, животноводству, тесты, достижения и сертификат.</p><div class="mod-footer"><div class="mod-tags"><span class="mod-tag">Курсы</span><span class="mod-tag">Тесты</span></div><span class="mod-link">Открыть →</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVESTOCK -->
+  <div id="p-livestock" class="page">
+    <div class="wrap" style="padding:28px 28px 56px">
+      <div id="ls-list-view">
+        <div class="page-hdr ph01 anim-up">
+          <div><div class="ph-mod">Module 01</div><div class="ph-title">LiveStock Pro</div><div class="ph-sub">Нажмите на животное для просмотра</div></div>
+          <button class="btn-primary" onclick="openAddModal()">+ Добавить животное</button>
+        </div>
+        <div class="kpi-row k3 anim-up-2">
+          <div class="kpi"><div class="kpi-lbl">Всего голов</div><div class="kpi-val" id="kpi-total">0</div></div>
+          <div class="kpi"><div class="kpi-lbl">Молоко / день</div><div class="kpi-val" id="kpi-milk">0 <span class="kpi-unit">л</span></div></div>
+          <div class="kpi"><div class="kpi-lbl">Средний вес</div><div class="kpi-val" id="kpi-weight">0 <span class="kpi-unit">кг</span></div></div>
+        </div>
+        <div class="card anim-up-3">
+          <div class="card-hd"><span class="card-title">Поголовье</span><span class="card-sub" id="ls-count">0 животных</span></div>
+          <div class="btn-dashed" onclick="openAddModal()">+ Новое животное</div>
+          <div id="animal-list"></div>
+        </div>
+      </div>
+      <div id="ls-detail-view" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- WATER -->
+  <div id="p-water" class="page">
+    <div class="wrap" style="padding:28px 28px 56px">
+      <div class="page-hdr ph02 anim-up">
+        <div><div class="ph-mod">Module 02</div><div class="ph-title">AgroWater</div><div class="ph-sub">Климат Бурятии — резко-континентальный</div></div>
+      </div>
+      <div class="water-layout">
+        <div class="card anim-up-2" style="padding:26px">
+          <div style="margin-bottom:14px"><div class="sec-title" style="margin-bottom:10px">Культура</div><div class="crop-grid" id="crop-grid"></div></div>
+          <div style="margin-bottom:14px"><div class="sec-title" style="margin-bottom:10px">Тип почвы</div><div class="pill-row" id="soil-btns"></div></div>
+          <div style="margin-bottom:14px"><div class="sec-title" style="margin-bottom:10px">Сезон</div><div class="season-row" id="season-btns"></div></div>
+          <div style="margin-bottom:18px"><div class="sec-title" style="margin-bottom:8px">Площадь (га)</div><input id="w-area" type="number" value="10" class="f-inp"></div>
+          <button class="calc-btn" onclick="calcWater()">Рассчитать полив</button>
+          <div class="res-block" id="w-res">
+            <div class="res-top">Результат расчёта</div>
+            <div class="res-nums">
+              <div class="r-n"><div class="r-val" id="r-d">—</div><div class="r-unit">м³</div><div class="r-lbl">В сутки</div></div>
+              <div class="r-n"><div class="r-val" id="r-w">—</div><div class="r-unit">м³</div><div class="r-lbl">В неделю</div></div>
+              <div class="r-n"><div class="r-val" id="r-e" style="color:var(--green)">—</div><div class="r-unit">%</div><div class="r-lbl">Экономия</div></div>
+            </div>
+            <div class="eco-wrap">
+              <div class="eco-hd"><span>Эко-рейтинг</span><span class="eco-pct" id="eco-p">0%</span></div>
+              <div class="eco-track"><div class="eco-fill" id="eco-f"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="w-side anim-up-3">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Расписание</span></div>
+            <div class="sched-item"><div><div class="sched-crop">🌾 Пшеница</div><div class="sched-days">Вт, Сб — 2 раза в нед.</div></div><div class="sched-vol">28 м³</div></div>
+            <div class="sched-item"><div><div class="sched-crop">🥔 Картофель</div><div class="sched-days">Ежедневно утром</div></div><div class="sched-vol">52 м³</div></div>
+            <div class="sched-item"><div><div class="sched-crop">🌽 Кукуруза</div><div class="sched-days">Пн, Ср, Пт</div></div><div class="sched-vol">38 м³</div></div>
+            <div class="sched-item"><div><div class="sched-crop">🫘 Гречиха</div><div class="sched-days">Пн, Чт</div></div><div class="sched-vol">22 м³</div></div>
+          </div>
+          <div class="green-card">
+            <div class="gc-lbl">Сэкономлено воды</div>
+            <div class="gc-val">1 240 м³</div>
+            <div class="gc-sub">за последние 30 дней</div>
+          </div>
+          <div class="card" style="padding:18px">
+            <div class="sec-title" style="margin-bottom:8px">Совет для Бурятии</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.7">Из-за резко-континентального климата поливайте в <strong style="color:var(--text)">5–8 утра</strong>. Летом испарение очень высокое — орошение вечером снижает эффективность на 40%.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FARMPEDIA -->
+  <div id="p-farmpedia" class="page">
+    <div class="wrap" style="padding:28px 28px 56px">
+      <div class="page-hdr ph03 anim-up">
+        <div><div class="ph-mod">Module 03</div><div class="ph-title">FarmPedia</div><div class="ph-sub">Справочник болезней растений и животных</div></div>
+      </div>
+
+      <!-- SYMPTOM FINDER -->
+      <div class="symptom-finder anim-up-2">
+        <div class="sf-title">🔍 Определитель болезни по симптомам</div>
+        <div class="sf-sub">Выберите симптомы — система найдёт подходящие болезни</div>
+        <div class="sf-tags" id="sf-tags"></div>
+        <button class="btn-primary" onclick="findBySymptoms()" style="font-size:13px;padding:9px 20px">Найти болезни →</button>
+        <div class="sf-results" id="sf-results">
+          <div class="sf-res-title">Возможные болезни:</div>
+          <div id="sf-list"></div>
+        </div>
+      </div>
+
+      <div class="fp-layout">
+        <div class="fp-sidebar">
+          <input class="fp-search" placeholder="🔍 Поиск..." oninput="filterFP(this.value)">
+          <div class="fp-cat-btn sel" onclick="setCat(this,'all')">📋 Все</div>
+          <div class="fp-cat-btn" onclick="setCat(this,'disease')">🔴 Болезни растений</div>
+          <div class="fp-cat-btn" onclick="setCat(this,'animal')">🟣 Болезни животных</div>
+          <div class="fp-cat-btn" onclick="setCat(this,'pest')">🟡 Вредители</div>
+          <div class="fp-cat-btn" onclick="setCat(this,'fert')">🟢 Удобрения</div>
+          <div class="fp-cat-btn" onclick="setCat(this,'crop')">🔵 Культуры</div>
+        </div>
+        <div>
+          <input class="fp-search" id="fp-search-mob" placeholder="🔍 Поиск по справочнику..." oninput="filterFP(this.value)" style="display:none">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="fp-cats-mob"></div>
+          <div class="fp-grid" id="fp-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARN -->
+  <div id="p-learn" class="page">
+    <div class="wrap" style="padding:28px 28px 56px">
+      <div class="page-hdr ph04 anim-up">
+        <div><div class="ph-mod">Module 04</div><div class="ph-title">AgroLearn</div><div class="ph-sub">Курсы по агрономии и животноводству</div></div>
+      </div>
+      <div class="learn-layout">
+        <div>
+          <div class="card anim-up-2" style="margin-bottom:16px">
+            <div class="card-hd"><span class="card-title">Курсы</span></div>
+            <div class="cr-row"><div class="cr-ico">🌱</div><div style="flex:1"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><div class="cr-name" style="margin:0">Основы агрономии Бурятии</div><span class="cr-badge">АКТИВЕН</span></div><div class="cr-bar"><div class="cr-fill" style="width:75%"></div></div><div class="cr-pct">75% — 15 из 20 уроков</div></div></div>
+            <div class="cr-row"><div class="cr-ico">🐄</div><div style="flex:1"><div class="cr-name">Животноводство Забайкалья</div><div class="cr-bar"><div class="cr-fill" style="width:45%"></div></div><div class="cr-pct">45% — 9 из 20 уроков</div></div></div>
+            <div class="cr-row"><div class="cr-ico">💧</div><div style="flex:1"><div class="cr-name">Ирригация в сухом климате</div><div class="cr-bar"><div class="cr-fill" style="width:20%"></div></div><div class="cr-pct">20% — 4 из 20 уроков</div></div></div>
+            <div class="cr-row"><div class="cr-ico">🧪</div><div style="flex:1"><div class="cr-name">Почвоведение — каштановые почвы</div><div class="cr-bar"><div class="cr-fill" style="width:0%"></div></div><div class="cr-pct">Не начат</div></div></div>
+            <div class="cr-row"><div class="cr-ico">🌾</div><div style="flex:1"><div class="cr-name">Зерновые культуры Бурятии</div><div class="cr-bar"><div class="cr-fill" style="width:0%"></div></div><div class="cr-pct">Не начат</div></div></div>
+          </div>
+          <div class="card anim-up-3">
+            <div class="quiz-hdr"><span class="card-title">Быстрый тест</span><span class="quiz-score">Очки: <span id="q-score">0</span></span></div>
+            <div class="quiz-body"><div class="quiz-q" id="q-text"></div><div id="q-opts"></div></div>
+          </div>
+        </div>
+        <div class="anim-up-4">
+          <div class="ls-widget"><div class="ls-lbl">Уровень</div><div class="level-n">4</div><div style="font-size:14px;font-weight:500;color:var(--text)">Опытный агроном</div></div>
+          <div class="ls-widget"><div class="ls-lbl">Очки</div><div style="font-size:26px;font-weight:700;color:var(--text)" id="pts">240</div><div style="font-size:12px;color:var(--text3)">накоплено</div></div>
+          <div class="ls-widget">
+            <div class="ls-lbl">Достижения</div>
+            <div class="ach-grid">
+              <div class="ach on"><span>🌱</span><span class="ach-lbl">Новичок</span></div>
+              <div class="ach on"><span>📚</span><span class="ach-lbl">Читатель</span></div>
+              <div class="ach on"><span>⚡</span><span class="ach-lbl">Быстрый</span></div>
+              <div class="ach"><span>🏆</span><span class="ach-lbl">Эксперт</span></div>
+              <div class="ach"><span>🔥</span><span class="ach-lbl">7 дней</span></div>
+              <div class="ach"><span>💎</span><span class="ach-lbl">Мастер</span></div>
+              <div class="ach"><span>🌟</span><span class="ach-lbl">Топ-10</span></div>
+              <div class="ach"><span>📜</span><span class="ach-lbl">Диплом</span></div>
+            </div>
+          </div>
+          <div class="ls-widget">
+            <div class="ls-lbl">До сертификата</div>
+            <div style="font-size:26px;font-weight:700;color:var(--text)">75%</div>
+            <div style="font-size:12px;color:var(--text3);margin-bottom:2px">Завершите «Основы агрономии»</div>
+            <div class="cert-bar"><div class="cert-fill"></div></div>
+            <button class="btn-full">Продолжить курс →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ADD ANIMAL MODAL -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <div class="modal-title">Новое <span>животное</span></div>
+    <div>
+      <div class="m-row">
+        <div><label class="ef-lbl">Кличка</label><input id="m-name" class="ef-inp" placeholder="Зорька"></div>
+        <div><label class="ef-lbl">Номер</label><input id="m-num" class="ef-inp" placeholder="#007"></div>
+      </div>
+      <label class="ef-lbl" style="margin-bottom:8px">Вид животного</label>
+      <div class="type-grid" id="type-grid"></div>
+      <div class="m-row" style="margin-top:12px">
+        <div><label class="ef-lbl">Порода</label><input id="m-breed" class="ef-inp" placeholder="Симментальская"></div>
+        <div><label class="ef-lbl">Вес (кг)</label><input id="m-weight" type="number" class="ef-inp" placeholder="450"></div>
+      </div>
+      <div class="m-row">
+        <div><label class="ef-lbl">Возраст (лет)</label><input id="m-age" type="number" class="ef-inp" placeholder="3"></div>
+        <div><label class="ef-lbl">Молоко (л/д)</label><input id="m-milk" type="number" class="ef-inp" placeholder="15"></div>
+      </div>
+      <label class="ef-lbl" style="margin-bottom:8px">Статус здоровья</label>
+      <div class="status-row">
+        <button class="stat-btn sel-ok" id="sb-ok" onclick="setStatus('ok')">✅ Здоров</button>
+        <button class="stat-btn" id="sb-warn" onclick="setStatus('warn')">⚠️ Наблюдение</button>
+        <button class="stat-btn" id="sb-sick" onclick="setStatus('sick')">🚨 Болен</button>
+      </div>
+      <label class="ef-lbl" style="margin-top:12px;margin-bottom:6px">Заметки</label>
+      <textarea id="m-notes" class="ef-ta" rows="2" placeholder="Дополнительная информация..."></textarea>
+    </div>
+    <div class="m-actions">
+      <button class="btn-cancel" onclick="closeAddModal()" style="flex:1">Отмена</button>
+      <button class="btn-save" onclick="saveNewAnimal()" style="flex:2">💾 Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+let dark = false;
+let currentAnimalIdx = 0;
+let newAnimalType = '🐄';
+let newAnimalStatus = 'ok';
+let selCrop=0, selSoil=0, selSeason=0;
+let fpCat = 'all';
+let selSymptoms = [];
+let qi=0, qs=0, qAnswered=false;
+
+// Animals data (will sync with Firebase when configured)
+let animals = [
+  {id:1,name:'Зорька',num:'#003',type:'🐄',breed:'Голштинская',weight:490,age:4,milk:18,vacc:3,status:'sick',notes:'Требует осмотра ветеринара. Надой снизился на 2 л.'},
+  {id:2,name:'Майка',num:'#002',type:'🐄',breed:'Симментальская',weight:520,age:5,milk:22,vacc:2,status:'warn',notes:'Ожидается отёл через 3 дня.'},
+  {id:3,name:'Буян',num:'#005',type:'🐂',breed:'Герефорд',weight:780,age:3,milk:0,vacc:3,status:'ok',notes:'Состояние отличное.'},
+  {id:4,name:'Пеструха',num:'#001',type:'🐄',breed:'Чёрно-пёстрая',weight:460,age:6,milk:16,vacc:4,status:'ok',notes:'Плановая прививка в июне.'},
+  {id:5,name:'Белка',num:'#012',type:'🐑',breed:'Меринос',weight:85,age:2,milk:0,vacc:2,status:'ok',notes:'Стрижка через 7 дней.'},
+  {id:6,name:'Нюшка',num:'#008',type:'🐷',breed:'Ландрас',weight:195,age:1,milk:0,vacc:1,status:'warn',notes:'Плановый осмотр.'},
+  {id:7,name:'Буланый',num:'#010',type:'🐴',breed:'Бурятская лошадь',weight:420,age:5,milk:0,vacc:2,status:'ok',notes:'Рабочая лошадь. Используется для выпаса.'},
+  {id:8,name:'Рыжуха',num:'#015',type:'🐐',breed:'Горноалтайская',weight:65,age:3,milk:2,vacc:2,status:'ok',notes:'Молочная коза.'},
+];
+
+const ANIMAL_TYPES = ['🐄','🐂','🐑','🐐','🐷','🐴','🐔','🐕'];
+const ANIMAL_TYPE_NAMES = {'🐄':'Корова','🐂':'Бык','🐑':'Овца','🐐':'Коза','🐷':'Свинья','🐴':'Лошадь','🐔':'Курица','🐕':'Собака'};
+
+const SM = {
+  ok:{cls:'b-ok',txt:'✅ Здоров'},
+  warn:{cls:'b-warn',txt:'⚠️ Наблюдение'},
+  sick:{cls:'b-sick',txt:'🚨 Болен'}
+};
+
+const CROPS = [
+  {e:'🌾',n:'Пшеница',b:2.8,eco:85},{e:'🥔',n:'Картофель',b:5.8,eco:68},
+  {e:'🌽',n:'Кукуруза',b:4.2,eco:75},{e:'🫘',n:'Гречиха',b:2.4,eco:88},
+  {e:'🥕',n:'Морковь',b:3.0,eco:80},{e:'🌻',n:'Подсолнух',b:3.2,eco:76},
+];
+const SOILS=[{n:'Каштановая',m:1.1},{n:'Чернозём',m:1.0},{n:'Суглинок',m:1.15},{n:'Супесчаная',m:1.35}];
+const SEASONS=[{e:'🌱',n:'Весна',m:0.75},{e:'☀️',n:'Лето',m:1.5},{e:'🍂',n:'Осень',m:0.55}];
+
+// FARMPEDIA DATA — много болезней
+const FP = [
+  // Болезни растений
+  {ico:'🍂',name:'Фитофтороз',desc:'Грибковое заболевание картофеля и томатов. Бурые пятна на листьях, белый налёт снизу. Быстро распространяется при высокой влажности.',tag:'disease',symptoms:['бурые пятна','белый налёт','гниль листьев']},
+  {ico:'🟤',name:'Ржавчина пшеницы',desc:'Оранжево-коричневые пустулы на листьях злаков. Снижает урожайность на 30–50%. Характерна для Бурятии в жаркое лето.',tag:'disease',symptoms:['ржавые пятна','жёлтые листья','пустулы']},
+  {ico:'⬜',name:'Мучнистая роса',desc:'Белый мучнистый налёт на листьях и стеблях. Поражает большинство культур. Развивается при чередовании жары и влажности.',tag:'disease',symptoms:['белый налёт','мучнистый налёт','деформация листьев']},
+  {ico:'🖤',name:'Альтернариоз',desc:'Тёмно-коричневые пятна на листьях с жёлтой каймой. Поражает картофель, капусту. Возбудитель — грибок Alternaria.',tag:'disease',symptoms:['тёмные пятна','жёлтая кайма','гниль']},
+  {ico:'🟡',name:'Корневая гниль',desc:'Почернение и загнивание корней и основания стебля. Растение увядает и гибнет. Почвенные грибки и бактерии.',tag:'disease',symptoms:['увядание','гниль корней','почернение стебля']},
+  {ico:'🌿',name:'Бактериальный ожог',desc:'Потемнение и отмирание листьев и побегов. Выглядит как ожог. Поражает яблони, груши.',tag:'disease',symptoms:['почернение листьев','отмирание побегов','коричневые края']},
+  {ico:'🔵',name:'Ложная мучнистая роса (Пероноспороз)',desc:'Желтоватые пятна сверху листа, серо-фиолетовый налёт снизу. Поражает подсолнух, огурцы, лук.',tag:'disease',symptoms:['жёлтые пятна','серый налёт','деформация']},
+  {ico:'🫙',name:'Серая гниль (Ботритис)',desc:'Серый пушистый налёт на плодах и стеблях. Поражает ягоды, овощи. Развивается при высокой влажности и прохладной погоде.',tag:'disease',symptoms:['серый пушок','гниль плодов','мокрые пятна']},
+  {ico:'🟠',name:'Парша яблони',desc:'Оливково-бурые пятна на листьях и плодах. Плоды деформируются и трескаются. Типична для садов Бурятии.',tag:'disease',symptoms:['оливковые пятна','трещины на плодах','опадение листьев']},
+  {ico:'🌑',name:'Чёрная ножка картофеля',desc:'Основание стебля чернеет и гниёт. Растение легко выдёргивается из земли. Бактериальное заболевание.',tag:'disease',symptoms:['чёрное основание','гниль стебля','увядание']},
+  // Болезни животных
+  {ico:'🔴',name:'Ящур',desc:'Вирусное заболевание КРС, свиней, овец. Пузыри на слизистых рта и ног. Высококонтагиозное. Обязательная вакцинация в Бурятии.',tag:'animal',symptoms:['пузыри на деснах','хромота','слюнотечение','отказ от корма']},
+  {ico:'🐄',name:'Бруцеллёз',desc:'Бактериальная инфекция КРС и мелкого рогатого скота. Выкидыши у самок, орхит у самцов. Опасна для человека.',tag:'animal',symptoms:['выкидыш','бесплодие','лихорадка','увеличение лимфоузлов']},
+  {ico:'🫁',name:'Пастереллёз',desc:'Бактериальная септицемия КРС и овец. Температура, затруднённое дыхание, отёки. Лечение — антибиотики.',tag:'animal',symptoms:['высокая температура','затруднённое дыхание','отёк горла','слабость']},
+  {ico:'🧫',name:'Лептоспироз',desc:'Бактериальная инфекция, поражающая печень и почки. Желтуха, гемоглобинурия, аборты. Общая с человеком зооноза.',tag:'animal',symptoms:['желтуха','кровь в моче','аборты','лихорадка']},
+  {ico:'🐑',name:'Ченные оспа овец',desc:'Вирусное заболевание мелкого рогатого скота. Узелки и пузыри на коже и слизистых. Высокая смертность молодняка.',tag:'animal',symptoms:['узелки на коже','пузыри','лихорадка','истечения из носа']},
+  {ico:'🦠',name:'Сибирская язва',desc:'Особо опасное бактериальное заболевание. Отёки, карбункулы, сепсис. Обязательна немедленная изоляция и карантин.',tag:'animal',symptoms:['отёки','карбункулы','внезапная гибель','кровотечения']},
+  {ico:'🐴',name:'Сап лошадей',desc:'Бактериальная инфекция лошадей. Язвы на слизистой носа, пустулы на коже. Смертельно опасна для человека.',tag:'animal',symptoms:['язвы в носу','гнойные истечения','пустулы на коже','хромота']},
+  {ico:'💊',name:'Некробактериоз',desc:'Бактериальная инфекция копыт КРС и овец. Хромота, гнилостный запах, отёк копыт. Характерна при сырых пастбищах.',tag:'animal',symptoms:['хромота','гнилостный запах','отёк копыт','ранки между копытами']},
+  {ico:'🫀',name:'Лейкоз КРС',desc:'Хронический вирусный лейкоз. Увеличение лимфоузлов, истощение, снижение удоя. Передаётся при доении.',tag:'animal',symptoms:['увеличение лимфоузлов','истощение','снижение удоя','слабость']},
+  {ico:'🐷',name:'Чума свиней (КЧС)',desc:'Высококонтагиозное вирусное заболевание свиней. Температура, геморрагии, нервные явления. Карантинное заболевание.',tag:'animal',symptoms:['высокая температура','геморрагии на коже','судороги','отказ от корма']},
+  // Вредители
+  {ico:'🐛',name:'Колорадский жук',desc:'Главный враг картофеля. Объедает листья полностью. Обработка инсектицидами (Актара, Конфидор).',tag:'pest',symptoms:['дыры в листьях','оранжевые яйца снизу листа','объеденные стебли']},
+  {ico:'🦗',name:'Тля злаковая',desc:'Высасывает сок из злаков. Переносит вирусы. Листья скручиваются и желтеют. Обработка Актелликом.',tag:'pest',symptoms:['скручивание листьев','клейкий налёт','чёрные точки на листьях']},
+  {ico:'🐌',name:'Слизень полевой',desc:'Повреждает листья и плоды ночью. Активен в сырую погоду. Рассыпать суперфосфат вокруг грядок.',tag:'pest',symptoms:['дыры в листьях','серебристые следы','повреждения плодов']},
+  {ico:'🦟',name:'Проволочник',desc:'Личинки жука-щелкуна. Повреждают корни и клубни. Корнеплоды покрываются ходами.',tag:'pest',symptoms:['ходы в клубнях','гибель рассады','повреждения корней']},
+  {ico:'🪲',name:'Крестоцветная блошка',desc:'Мелкий жук, дырявит листья крестоцветных (капуста, редис). Опасен для рассады.',tag:'pest',symptoms:['мелкие дыры в листьях','ямки на листьях','гибель рассады']},
+  // Удобрения
+  {ico:'🧪',name:'Карбамид (мочевина)',desc:'Лучшее азотное удобрение для почв Бурятии. 46% азота. Вносить весной под культуры. Норма 100–200 кг/га.',tag:'fert',symptoms:[]},
+  {ico:'💚',name:'Суперфосфат',desc:'Фосфорное удобрение. Улучшает корневую систему и плодоношение. Вносить осенью при вспашке. Норма 200–300 кг/га.',tag:'fert',symptoms:[]},
+  {ico:'🟢',name:'Хлористый калий',desc:'Калийное удобрение. Повышает засухо- и морозоустойчивость — важно для Бурятии. Норма 80–150 кг/га.',tag:'fert',symptoms:[]},
+  {ico:'🌿',name:'Аммофос',desc:'Комплексное NP-удобрение (10:46). Идеально для стартовой подкормки в каштановых почвах Забайкалья.',tag:'fert',symptoms:[]},
+  {ico:'🟫',name:'Навоз перепревший',desc:'Органическое удобрение. Улучшает структуру каштановых почв Бурятии. Вносить 20–40 т/га под зяблевую вспашку.',tag:'fert',symptoms:[]},
+  // Культуры Бурятии
+  {ico:'🌾',name:'Яровая пшеница',desc:'Главная зерновая культура Бурятии. Сорта Бурятская 79, Селенга. Посев май, уборка август-сентябрь.',tag:'crop',symptoms:[]},
+  {ico:'🥔',name:'Картофель',desc:'Основная овощная культура. Сорта Адретта, Невский. Посадка конец мая. Урожайность 150–200 ц/га.',tag:'crop',symptoms:[]},
+  {ico:'🫘',name:'Гречиха',desc:'Традиционная культура Бурятии. Очень засухоустойчива. Посев июнь, уборка сентябрь. Хороший медонос.',tag:'crop',symptoms:[]},
+  {ico:'🌻',name:'Подсолнух',desc:'Масличная культура. Адаптирована к степям Бурятии. Сорта Енисей, Сибирский. Засухоустойчив.',tag:'crop',symptoms:[]},
+];
+
+// Symptom list
+const ALL_SYMPTOMS = [
+  'бурые пятна','белый налёт','жёлтые листья','увядание','гниль',
+  'хромота','лихорадка','слюнотечение','отказ от корма','выкидыш',
+  'отёки','кашель','понос','снижение удоя','высокая температура',
+  'дыры в листьях','скручивание листьев','ржавые пятна','пустулы'
+];
+
+const QUIZ = [
+  {q:'Какой pH почвы оптимален для каштановых почв Бурятии?',opts:['pH 4–5 (кислая)','pH 6.5–7.5 (слабощелочная)','pH 8–9 (щелочная)','pH 3–4'],ans:1},
+  {q:'Сколько воды в сутки требует корова 500 кг в жаркий день?',opts:['15–20 л','30–40 л','60–80 л','100+ л'],ans:2},
+  {q:'Какое удобрение лучше для каштановых почв Бурятии?',opts:['Только суперфосфат','Аммофос + хлористый калий','Только известь','Только навоз'],ans:1},
+  {q:'Когда сеять яровую пшеницу в Бурятии?',opts:['Апрель','Конец мая','Июль','Март'],ans:1},
+  {q:'Какая болезнь КРС требует немедленного карантина?',opts:['Лейкоз','Некробактериоз','Сибирская язва','Лептоспироз'],ans:2},
+];
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+function authTab(t){
+  document.getElementById('t-in').classList.toggle('active',t==='in');
+  document.getElementById('t-up').classList.toggle('active',t==='up');
+  document.getElementById('form-in').style.display = t==='in'?'block':'none';
+  document.getElementById('form-up').style.display = t==='up'?'block':'none';
+}
+
+async function doLogin(){
+  const email = document.getElementById('a-email').value;
+  const pass = document.getElementById('a-pass').value;
+  const err = document.getElementById('auth-err');
+  if(!email||!pass){showErr(err,'Заполните все поля');return;}
+  if(window._fbReady && window._fbFns){
+    try{
+      await window._fbFns.signInWithEmailAndPassword(window._auth,email,pass);
+      enterSite();
+    }catch(e){showErr(err,'Неверный email или пароль');}
+  } else {
+    enterSite(); // demo mode without Firebase
+  }
+}
+
+async function doRegister(){
+  const name = document.getElementById('a-name').value;
+  const email = document.getElementById('a-email2').value;
+  const pass = document.getElementById('a-pass2').value;
+  const err = document.getElementById('auth-err2');
+  if(!name||!email||!pass){showErr(err,'Заполните все поля');return;}
+  if(pass.length < 6){showErr(err,'Пароль минимум 6 символов');return;}
+  if(window._fbReady && window._fbFns){
+    try{
+      await window._fbFns.createUserWithEmailAndPassword(window._auth,email,pass);
+      enterSite();
+    }catch(e){showErr(err,'Ошибка регистрации: '+e.message);}
+  } else {
+    enterSite();
+  }
+}
+
+function showErr(el,msg){el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',3500);}
+function enterGuest(){enterSite();}
+function enterSite(){
+  document.getElementById('auth-page').style.display='none';
+  document.getElementById('app').style.display='block';
+  renderNav('home');
+  renderAnimals();
+  buildWater();
+  renderFP();
+  buildTypeGrid();
+  buildSymptomTags();
+  loadQ();
+  // Mobile fp search
+  const ms = document.getElementById('fp-search-mob');
+  if(window.innerWidth<=900){ ms.style.display='block'; buildMobileCats(); }
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+function renderNav(page){
+  document.getElementById('nav-right').innerHTML = `
+    ${page!=='home'?`<div class="nav-back" onclick="goPage('home')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Главная</div>`:''}
+    <div class="dd-wrap">
+      <div class="icon-btn" onclick="toggleDD('nd')" title="Уведомления">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-badge">3</div>
+      </div>
+      <div class="dropdown" id="nd" style="width:310px">
+        <div class="dd-hdr"><span class="dd-hdr-title">Уведомления</span><span class="dd-hdr-sub">3 новых</span></div>
+        <div class="notif-item" onclick="goAnimalFromNotif(0)">
+          <div class="n-dot" style="background:var(--red)"></div>
+          <div><div class="n-name">Зорька #003</div><div class="n-msg">Прививка от ящура просрочена</div><div class="n-time">Сегодня</div></div>
+        </div>
+        <div class="notif-item" onclick="goAnimalFromNotif(1)">
+          <div class="n-dot" style="background:var(--amber)"></div>
+          <div><div class="n-name">Майка #002</div><div class="n-msg">Ожидается отёл через 3 дня</div><div class="n-time">Сегодня</div></div>
+        </div>
+        <div class="notif-item" onclick="goAnimalFromNotif(2)">
+          <div class="n-dot" style="background:var(--amber)"></div>
+          <div><div class="n-name">Буян #005</div><div class="n-msg">Плановое взвешивание завтра</div><div class="n-time">Завтра</div></div>
+        </div>
+        <div class="dd-footer"><button class="dd-more-btn">Показать все →</button></div>
+      </div>
+    </div>
+    <div class="icon-btn" onclick="toggleTheme()" title="Сменить тему" id="theme-btn">
+      <svg id="theme-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </div>
+    <div class="dd-wrap">
+      <div class="avatar-btn" onclick="toggleDD('pd')">АС</div>
+      <div class="dropdown" id="pd" style="width:240px">
+        <div class="profile-user">
+          <div class="profile-av">АС</div>
+          <div><div class="profile-name">Айнур Саая</div><div class="profile-email">Бурятский аграрный колледж</div></div>
+        </div>
+        <div class="profile-menu">
+          <div class="p-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 11l-5-5-5 5M17 18l-5-5-5 5"/></svg><span>Сменить аккаунт</span></div>
+          <div class="p-divider"></div>
+          <div class="p-item danger" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Выйти</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function goAnimalFromNotif(idx){
+  closeAllDD();
+  goPage('livestock');
+  setTimeout(()=>showAnimalDetail(idx),300);
+}
+
+function toggleDD(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const wasOpen=el.classList.contains('open');
+  closeAllDD();
+  if(!wasOpen) el.classList.add('open');
+}
+function closeAllDD(){document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('open'));}
+document.addEventListener('click',e=>{if(!e.target.closest('.dd-wrap')&&!e.target.closest('.avatar-btn'))closeAllDD();});
+
+async function logout(){
+  if(window._fbReady&&window._fbFns) await window._fbFns.signOut(window._auth);
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-page').style.display='flex';
+}
+
+// ══════════════════════════════════════════
+// PAGES
+// ══════════════════════════════════════════
+function goPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('p-'+p)?.classList.add('active');
+  renderNav(p);
+  if(p==='livestock') showLsList();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function scrollMods(){document.getElementById('mods-anchor')?.scrollIntoView({behavior:'smooth'});}
+
+// ══════════════════════════════════════════
+// LIVESTOCK
+// ══════════════════════════════════════════
+function calcKPI(){
+  const total=animals.length;
+  const milk=animals.reduce((s,a)=>s+(a.milk||0),0);
+  const avgWeight=total?Math.round(animals.reduce((s,a)=>s+a.weight,0)/total):0;
+  document.getElementById('kpi-total').textContent=total;
+  document.getElementById('kpi-milk').innerHTML=milk+' <span class="kpi-unit">л</span>';
+  document.getElementById('kpi-weight').innerHTML=avgWeight+' <span class="kpi-unit">кг</span>';
+  document.getElementById('ls-count').textContent=total+' животных';
+}
+
+function renderAnimals(){
+  const list=document.getElementById('animal-list');
+  if(!list)return;
+  list.innerHTML=animals.map((a,i)=>`
+    <div class="a-row anim-up" style="animation-delay:${i*0.04}s" onclick="showAnimalDetail(${i})">
+      <div class="a-emoji">${a.type}</div>
+      <div style="flex:1">
+        <div class="a-name">${a.name}</div>
+        <div class="a-breed">${a.breed} · ${a.num} · ${a.weight} кг · ${a.age} ${a.age===1?'год':a.age<5?'года':'лет'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="${SM[a.status].cls}">${SM[a.status].txt}</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>`).join('');
+  calcKPI();
+}
+
+function showLsList(){
+  document.getElementById('ls-list-view').style.display='block';
+  document.getElementById('ls-detail-view').style.display='none';
+  renderAnimals();
+}
+
+function showAnimalDetail(i){
+  currentAnimalIdx=i;
+  const a=animals[i];
+  const s=SM[a.status];
+  document.getElementById('ls-list-view').style.display='none';
+  const dv=document.getElementById('ls-detail-view');
+  dv.style.display='block';
+  dv.innerHTML=`
+    <div class="det-hdr anim-up">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
+        <div class="det-emoji">${a.type}</div>
+        <div>
+          <div class="det-name">${a.name}</div>
+          <div class="det-breed">${a.breed} · ${a.num}</div>
+          <span class="${s.cls}">${s.txt}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <div style="text-align:right"><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Последний осмотр</div><div style="font-size:13px;font-weight:500;color:var(--text)">1 февр. 2026</div></div>
+        <button class="btn-secondary" style="font-size:12px;padding:7px 16px" onclick="showLsList()">← Назад</button>
+      </div>
+    </div>
+
+    <div class="kpi-row k4 anim-up-2">
+      <div class="kpi" style="text-align:center"><div class="kpi-lbl">Вес</div><div class="kpi-val" style="font-size:24px">${a.weight}</div><div style="font-size:12px;color:var(--text3)">кг</div></div>
+      <div class="kpi" style="text-align:center"><div class="kpi-lbl">Возраст</div><div class="kpi-val" style="font-size:24px">${a.age}</div><div style="font-size:12px;color:var(--text3)">лет</div></div>
+      <div class="kpi" style="text-align:center"><div class="kpi-lbl">Молоко</div><div class="kpi-val" style="font-size:24px">${a.milk||'—'}</div><div style="font-size:12px;color:var(--text3)">л/день</div></div>
+      <div class="kpi" style="text-align:center"><div class="kpi-lbl">Прививки</div><div class="kpi-val" style="font-size:24px">${a.vacc}</div><div style="font-size:12px;color:var(--text3)">всего</div></div>
+    </div>
+
+    <div class="det-grid anim-up-3">
+      <div class="card">
+        <div class="card-hd"><span class="card-title">История событий</span></div>
+        <div class="hist-item"><div class="h-ico h-ico-r">💉</div><div><div class="h-title">Прививка от ящура</div><div class="h-sub">Выполнена. Следующая через 6 мес.</div><div class="h-date">15 февраля 2026</div></div></div>
+        <div class="hist-item"><div class="h-ico h-ico-b">⚖️</div><div><div class="h-title">Взвешивание</div><div class="h-sub">${a.weight} кг — прирост +12 кг</div><div class="h-date">10 февраля 2026</div></div></div>
+        <div class="hist-item"><div class="h-ico h-ico-g">🩺</div><div><div class="h-title">Осмотр ветеринара</div><div class="h-sub">Общее состояние хорошее</div><div class="h-date">1 февраля 2026</div></div></div>
+        <div class="hist-item"><div class="h-ico h-ico-a">🍼</div><div><div class="h-title">Отёл</div><div class="h-sub">Телёнок здоров, вес 42 кг</div><div class="h-date">15 января 2026</div></div></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">График прививок</span></div>
+          <div class="vacc-row"><div><div class="vacc-n">Ящур</div><div class="vacc-d">Следующая: авг. 2026</div></div><span class="b-sick">Просрочена</span></div>
+          <div class="vacc-row"><div><div class="vacc-n">Бруцеллёз</div><div class="vacc-d">Следующая: июнь 2026</div></div><span class="b-ok">Выполнена</span></div>
+          <div class="vacc-row"><div><div class="vacc-n">Лептоспироз</div><div class="vacc-d">Следующая: дек. 2026</div></div><span class="b-ok">Выполнена</span></div>
+        </div>
+
+        <div id="notes-view" class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div class="card-title">Заметки</div>
+            <div id="saved-badge" class="saved-badge">✓ Сохранено</div>
+          </div>
+          <div id="notes-txt" style="font-size:13px;color:var(--text2);line-height:1.7;min-height:44px">${a.notes}</div>
+          <button class="btn-full" style="margin-top:12px" onclick="openEdit()">✏️ Редактировать</button>
+        </div>
+
+        <div id="notes-edit" style="display:none" class="edit-card">
+          <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px">Редактирование</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Изменения сохраняются сразу</div>
+          <div class="ef-grid">
+            <div><label class="ef-lbl">Вес (кг)</label><input id="e-w" type="number" class="ef-inp" value="${a.weight}"></div>
+            <div><label class="ef-lbl">Молоко (л/д)</label><input id="e-m" type="number" class="ef-inp" value="${a.milk}"></div>
+          </div>
+          <div style="margin-bottom:10px"><label class="ef-lbl">Статус</label>
+            <select id="e-s" class="ef-inp">
+              <option value="ok" ${a.status==='ok'?'selected':''}>✅ Здоров</option>
+              <option value="warn" ${a.status==='warn'?'selected':''}>⚠️ Наблюдение</option>
+              <option value="sick" ${a.status==='sick'?'selected':''}>🚨 Болен</option>
+            </select>
+          </div>
+          <label class="ef-lbl">Заметки</label>
+          <textarea id="e-n" class="ef-ta" rows="3">${a.notes}</textarea>
+          <div class="ef-actions">
+            <button class="btn-cancel" onclick="cancelEdit()" style="flex:1">Отмена</button>
+            <button class="btn-save" onclick="saveEdit()" style="flex:2">💾 Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openEdit(){document.getElementById('notes-view').style.display='none';document.getElementById('notes-edit').style.display='block';}
+function cancelEdit(){document.getElementById('notes-view').style.display='block';document.getElementById('notes-edit').style.display='none';}
+function saveEdit(){
+  const a=animals[currentAnimalIdx];
+  a.weight=+document.getElementById('e-w').value||a.weight;
+  a.milk=+document.getElementById('e-m').value;
+  a.status=document.getElementById('e-s').value;
+  a.notes=document.getElementById('e-n').value;
+  // Firebase save
+  if(window._fbReady&&window._fbFns&&a.firebaseId){
+    window._fbFns.updateDoc(window._fbFns.doc(window._db,'animals',a.firebaseId),{weight:a.weight,milk:a.milk,status:a.status,notes:a.notes});
+  }
+  showAnimalDetail(currentAnimalIdx);
+  setTimeout(()=>{const b=document.getElementById('saved-badge');if(b){b.style.display='block';setTimeout(()=>b.style.display='none',2800);}},50);
+}
+
+// ADD ANIMAL
+function buildTypeGrid(){
+  document.getElementById('type-grid').innerHTML=ANIMAL_TYPES.map(t=>`
+    <div class="type-btn${t===newAnimalType?' sel':''}" onclick="setAnimalType('${t}')">
+      <div class="type-emoji">${t}</div>
+      <div style="font-size:10px">${ANIMAL_TYPE_NAMES[t]}</div>
+    </div>`).join('');
+}
+function setAnimalType(t){newAnimalType=t;buildTypeGrid();}
+function setStatus(s){
+  newAnimalStatus=s;
+  document.querySelectorAll('.stat-btn').forEach(b=>{b.className='stat-btn';});
+  document.getElementById('sb-'+s).classList.add('sel-'+s);
+}
+function openAddModal(){document.getElementById('add-modal').classList.add('open');}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');}
+async function saveNewAnimal(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){alert('Введите кличку животного');return;}
+  const newA={
+    id:Date.now(),name,
+    num:document.getElementById('m-num').value||'#'+animals.length,
+    type:newAnimalType,
+    breed:document.getElementById('m-breed').value||'Порода',
+    weight:+document.getElementById('m-weight').value||300,
+    age:+document.getElementById('m-age').value||1,
+    milk:+document.getElementById('m-milk').value||0,
+    vacc:0,status:newAnimalStatus,
+    notes:document.getElementById('m-notes').value||'',
+  };
+  // Firebase
+  if(window._fbReady&&window._fbFns){
+    try{
+      const ref=await window._fbFns.addDoc(window._fbFns.collection(window._db,'animals'),newA);
+      newA.firebaseId=ref.id;
+    }catch(e){console.log('Firebase not configured, saving locally');}
+  }
+  animals.push(newA);
+  closeAddModal();
+  renderAnimals();
+  // clear form
+  ['m-name','m-num','m-breed','m-weight','m-age','m-milk','m-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  newAnimalType='🐄'; newAnimalStatus='ok'; buildTypeGrid();
+}
+// close modal on bg click
+document.getElementById('add-modal').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
+
+// ══════════════════════════════════════════
+// WATER
+// ══════════════════════════════════════════
+function buildWater(){
+  document.getElementById('crop-grid').innerHTML=CROPS.map((c,i)=>`
+    <div class="crop-btn${i===selCrop?' sel':''}" onclick="selCrop=${i};buildWater()">
+      <div class="crop-emoji">${c.e}</div><div class="crop-name">${c.n}</div>
+    </div>`).join('');
+  document.getElementById('soil-btns').innerHTML=SOILS.map((s,i)=>`
+    <div class="pill${i===selSoil?' sel':''}" onclick="selSoil=${i};buildWater()">${s.n}</div>`).join('');
+  document.getElementById('season-btns').innerHTML=SEASONS.map((s,i)=>`
+    <div class="season-btn${i===selSeason?' sel':''}" onclick="selSeason=${i};buildWater()">
+      <span class="s-emoji">${s.e}</span><span>${s.n}</span>
+    </div>`).join('');
+}
+function calcWater(){
+  const c=CROPS[selCrop],s=SOILS[selSoil],se=SEASONS[selSeason];
+  const area=+document.getElementById('w-area').value||10;
+  const daily=(c.b*s.m*se.m*area).toFixed(1);
+  const eco=c.eco;
+  document.getElementById('r-d').textContent=daily;
+  document.getElementById('r-w').textContent=(daily*7).toFixed(0);
+  document.getElementById('r-e').textContent=eco;
+  document.getElementById('eco-p').textContent=eco+'%';
+  const rb=document.getElementById('w-res');
+  rb.classList.add('show');
+  setTimeout(()=>document.getElementById('eco-f').style.width=eco+'%',60);
+}
+
+// ══════════════════════════════════════════
+// FARMPEDIA
+// ══════════════════════════════════════════
+const TAG_CLASSES={disease:'fp-disease',animal:'fp-animal',pest:'fp-pest',fert:'fp-fert',crop:'fp-crop'};
+const TAG_NAMES={disease:'Болезнь растений',animal:'Болезнь животных',pest:'Вредитель',fert:'Удобрение',crop:'Культура'};
+
+function renderFP(q=''){
+  const items=FP.filter(d=>(fpCat==='all'||d.tag===fpCat)&&(!q||(d.name.toLowerCase().includes(q.toLowerCase())||d.desc.toLowerCase().includes(q.toLowerCase()))));
+  document.getElementById('fp-grid').innerHTML=items.map(d=>`
+    <div class="fp-card anim-up">
+      <div class="fp-ico">${d.ico}</div>
+      <div class="fp-name">${d.name}</div>
+      <div class="fp-desc">${d.desc.substring(0,100)}${d.desc.length>100?'...':''}</div>
+      <span class="fp-badge ${TAG_CLASSES[d.tag]}">${TAG_NAMES[d.tag]}</span>
+    </div>`).join('');
+}
+function setCat(el,cat){
+  document.querySelectorAll('.fp-cat-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  fpCat=cat; renderFP(document.querySelector('.fp-search')?.value||'');
+  // sync mobile cats
+  document.querySelectorAll('.fp-cat-mob').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.fp-cat-mob[data-cat="'+cat+'"]').forEach(b=>b.classList.add('sel'));
+}
+function filterFP(q){renderFP(q);}
+function buildMobileCats(){
+  const cats=[['all','Все'],['disease','Болезни растений'],['animal','Болезни животных'],['pest','Вредители'],['fert','Удобрения'],['crop','Культуры']];
+  document.getElementById('fp-cats-mob').innerHTML=cats.map(([cat,lbl])=>`
+    <div class="fp-cat-btn fp-cat-mob${cat==='all'?' sel':''}" data-cat="${cat}" onclick="setCat(this,'${cat}')" style="font-size:12px;padding:7px 12px">${lbl}</div>`).join('');
+}
+
+// SYMPTOM FINDER
+function buildSymptomTags(){
+  document.getElementById('sf-tags').innerHTML=ALL_SYMPTOMS.map(s=>`
+    <button class="sf-tag" onclick="toggleSymptom(this,'${s}')">${s}</button>`).join('');
+}
+function toggleSymptom(el,s){
+  el.classList.toggle('sel');
+  if(selSymptoms.includes(s)) selSymptoms=selSymptoms.filter(x=>x!==s);
+  else selSymptoms.push(s);
+}
+function findBySymptoms(){
+  if(!selSymptoms.length){alert('Выберите хотя бы один симптом');return;}
+  const results=FP.filter(d=>d.symptoms&&d.symptoms.some(s=>selSymptoms.some(sel=>s.includes(sel)||sel.includes(s)))).sort((a,b)=>{
+    const sa=a.symptoms.filter(s=>selSymptoms.some(sel=>s.includes(sel)||sel.includes(s))).length;
+    const sb=b.symptoms.filter(s=>selSymptoms.some(sel=>s.includes(sel)||sel.includes(s))).length;
+    return sb-sa;
+  });
+  const sr=document.getElementById('sf-results');
+  const sl=document.getElementById('sf-list');
+  if(!results.length){sl.innerHTML='<div style="font-size:13px;color:var(--text3)">По выбранным симптомам болезни не найдены</div>';sr.classList.add('show');return;}
+  sl.innerHTML=results.slice(0,5).map(d=>{
+    const matches=d.symptoms.filter(s=>selSymptoms.some(sel=>s.includes(sel)||sel.includes(s))).length;
+    return `<div class="sf-res-card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:18px">${d.ico}</span><div class="sf-res-name">${d.name}</div><span class="fp-badge ${TAG_CLASSES[d.tag]}">${TAG_NAMES[d.tag]}</span></div>
+      <div class="sf-res-desc">${d.desc.substring(0,120)}...</div>
+      <div class="sf-match">✓ Совпадений: ${matches} из ${d.symptoms.length}</div>
+    </div>`;
+  }).join('');
+  sr.classList.add('show');
+}
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+function loadQ(){
+  const q=QUIZ[qi%QUIZ.length];
+  const qt=document.getElementById('q-text');const qo=document.getElementById('q-opts');
+  if(!qt||!qo)return;
+  qt.textContent=q.q;
+  qo.innerHTML=q.opts.map((o,i)=>`<button class="qopt" onclick="ansQ(this,${i===q.ans})">${o}</button>`).join('');
+  qAnswered=false;
+}
+function ansQ(btn,correct){
+  if(qAnswered)return; qAnswered=true;
+  const q=QUIZ[qi%QUIZ.length];
+  document.querySelectorAll('.qopt').forEach((b,i)=>{if(i===q.ans)b.classList.add('correct');});
+  if(!correct)btn.classList.add('wrong');
+  else{qs++;document.getElementById('q-score').textContent=qs;document.getElementById('pts').textContent=240+qs*10;}
+  qi++; setTimeout(loadQ,1900);
+}
+
+// ══════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════
+function toggleTheme(){
+  dark=!dark;
+  document.body.classList.toggle('dark',dark);
+  const ico=document.getElementById('theme-ico');
+  if(ico) ico.innerHTML=dark
+    ?'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+    :'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  localStorage.setItem('theme',dark?'dark':'light');
+}
+// restore theme
+if(localStorage.getItem('theme')==='dark'){dark=true;document.body.classList.add('dark');}
+
+// mobile responsive
+if(window.innerWidth<=900){
+  document.querySelector('.w-side')?.style&&(document.querySelector('.w-side').style.display='none');
+}
+</script>
+</body>
+</html>
