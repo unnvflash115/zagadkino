@@ -9,14 +9,28 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .sudoku-cell { transition: background-color 0.15s ease; }
-        .sudoku-border-r { border-right: 2px solid #334155 !important; }
-        .sudoku-border-b { border-bottom: 2px solid #334155 !important; }
+        .sudoku-cell { 
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            aspect-ratio: 1 / 1;
+        }
+        .sudoku-border-r { border-right: 3px solid #334155 !important; }
+        .sudoku-border-b { border-bottom: 3px solid #334155 !important; }
+
+        /* Анимация при сборе линии или блока 3х3 */
+        @keyframes sudoku-complete {
+            0% { transform: scale(1); background-color: #86efac; }
+            50% { transform: scale(1.08); background-color: #4ade80; }
+            100% { transform: scale(1); background-color: #ffffff; }
+        }
+        .cell-completed {
+            animation: sudoku-complete 0.6s ease-in-out;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Красивая синяя шапка -->
+    <!-- Шапка -->
     <header class="bg-blue-600 text-white shadow-md">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <h1 class="text-2xl font-black tracking-wide cursor-pointer flex items-center gap-2" onclick="showScreen('main-screen')">
@@ -35,10 +49,10 @@
         <section id="main-screen" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm text-center border border-slate-200">
                 <h2 class="text-2xl font-bold mb-2">Прокачай свой мозг!</h2>
-                <p class="text-slate-600 text-sm">Выбери мини-игру для тренировки внимания и логики.</p>
+                <p class="text-slate-600 text-sm">Выбери мини-игру для тренировки внимания, логики и гибкости мышления.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Карточка Шульте -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition">
                     <div>
@@ -47,7 +61,7 @@
                             <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold">Внимание</span>
                         </div>
                         <h3 class="text-xl font-bold mb-1">Таблицы Шульте</h3>
-                        <p class="text-slate-600 text-sm mb-4">Находи числа по порядку как можно быстрее. Развивает периферическое зрение.</p>
+                        <p class="text-slate-600 text-sm mb-4">Находи числа по порядку на скорость.</p>
                     </div>
                     <button onclick="startSchulte()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition">Играть</button>
                 </div>
@@ -60,9 +74,22 @@
                             <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold">Логика</span>
                         </div>
                         <h3 class="text-xl font-bold mb-1">Судоку</h3>
-                        <p class="text-slate-600 text-sm mb-4">Бесконечная генерация комбинаций! Допускается максимум 3 ошибки.</p>
+                        <p class="text-slate-600 text-sm mb-4">Головоломка с анимацией сбора блоков и линий.</p>
                     </div>
                     <button onclick="startSudoku()" class="w-full bg-amber-500 text-white py-2.5 rounded-xl font-semibold hover:bg-amber-600 transition">Играть</button>
+                </div>
+
+                <!-- Карточка Струпа -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-3xl">🎨</span>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-1 rounded-full font-semibold">Реакция</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Тест Струпа</h3>
+                        <p class="text-slate-600 text-sm mb-4">Совпадает ли цвет текста с его значением?</p>
+                    </div>
+                    <button onclick="startStroop()" class="w-full bg-purple-600 text-white py-2.5 rounded-xl font-semibold hover:bg-purple-700 transition">Играть</button>
                 </div>
             </div>
         </section>
@@ -109,7 +136,9 @@
                 </div>
             </div>
 
-            <div id="sudoku-board" class="grid grid-cols-9 gap-0 bg-slate-300 border-2 border-slate-700 rounded-lg overflow-hidden aspect-square"></div>
+            <div class="w-full bg-slate-700 p-1 rounded-xl shadow-md">
+                <div id="sudoku-board" class="grid grid-cols-9 gap-[1px] bg-slate-300 border border-slate-700 rounded-lg overflow-hidden w-full aspect-square"></div>
+            </div>
 
             <div class="flex justify-around items-center py-1">
                 <button onclick="eraseSudokuCell()" class="flex flex-col items-center text-slate-500 hover:text-blue-600 transition">
@@ -121,9 +150,27 @@
             <div class="grid grid-cols-9 gap-1">
                 <script>
                     for(let i=1; i<=9; i++) {
-                        document.write(`<button onclick="inputSudokuNumber(${i})" class="bg-white hover:bg-blue-50 text-blue-600 font-extrabold text-2xl py-3 rounded-xl shadow-sm border border-slate-200 active:bg-blue-100 transition">${i}</button>`);
+                        document.write(`<button onclick="inputSudokuNumber(${i})" class="bg-white hover:bg-blue-50 text-blue-600 font-extrabold text-xl sm:text-2xl py-3 rounded-xl shadow-sm border border-slate-200 active:bg-blue-100 transition">${i}</button>`);
                     }
                 </script>
+            </div>
+        </section>
+
+        <!-- Экран 4: Тест Струпа -->
+        <section id="stroop-screen" class="hidden space-y-4 max-w-md mx-auto w-full">
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
+                <button onclick="showScreen('main-screen')" class="text-slate-500 hover:text-slate-800 text-sm font-semibold">← Меню</button>
+                <div class="text-xl font-bold text-purple-600" id="stroop-timer">30</div>
+                <div class="text-sm font-semibold">Очки: <span id="stroop-score" class="text-xl text-purple-600">0</span></div>
+            </div>
+
+            <div class="bg-white p-12 rounded-2xl border text-center shadow-sm flex flex-col items-center justify-center min-h-[200px]">
+                <div id="stroop-word" class="text-5xl font-black tracking-wide select-none">Текст</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="answerStroop(false)" class="bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-xl text-lg shadow-sm transition active:scale-95">✕ Не совпадает</button>
+                <button onclick="answerStroop(true)" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl text-lg shadow-sm transition active:scale-95">✓ Совпадает</button>
             </div>
         </section>
 
@@ -137,9 +184,9 @@
         // ==========================================
         // SUPABASE КОНФИГУРАЦИЯ
         // ==========================================
-        const SUPABASE_URL = 'https://vuhenenavilcwuahygad.supabase.co'; 
-        const SUPABASE_KEY = 'sb_publishable_S3HngZnBez2bzpKvwH4MAg_xsPxjVAR'; 
-        const db = (SUPABASE_URL !== 'https://vuhenenavilcwuahygad.supabase.co') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; 
+        const db = (SUPABASE_URL !== 'YOUR_SUPABASE_URL') ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
         async function saveScoreToDB(gameName, scoreValue) {
             if (!db) return;
@@ -155,6 +202,7 @@
             document.getElementById(screenId).classList.remove('hidden');
             clearInterval(schulteInterval);
             clearInterval(sudokuInterval);
+            clearInterval(stroopInterval);
         }
 
         // ==========================================
@@ -218,7 +266,7 @@
         }
 
         // ==========================================
-        // ЛОГИКА: СУДОКУ (С ДИНАМИЧЕСКОЙ ГЕНЕРАЦИЕЙ)
+        // ЛОГИКА: СУДОКУ (С АНИМАЦИЯМИ И ФИКСИРОВАННОЙ СЕТКОЙ)
         // ==========================================
         let sudokuSelectedIdx = null;
         let sudokuMistakes = 0;
@@ -229,6 +277,9 @@
         let puzzleSolution = [];
         let puzzleInitial = [];
         let sudokuCurrentState = [];
+        let completedRows = new Set();
+        let completedCols = new Set();
+        let completedBoxes = new Set();
         let currentDifficulty = 'medium';
 
         function isValid(board, row, col, num) {
@@ -310,6 +361,10 @@
             sudokuTime = 0;
             sudokuSelectedIdx = null;
 
+            completedRows.clear();
+            completedCols.clear();
+            completedBoxes.clear();
+
             updateDifficultyUI();
             generateNewPuzzle(currentDifficulty);
             sudokuCurrentState = [...puzzleInitial];
@@ -318,12 +373,13 @@
             document.getElementById('sudoku-score').innerText = sudokuScore;
 
             renderSudokuBoard();
+            checkInitialCompletions();
 
             clearInterval(sudokuInterval);
             sudokuInterval = setInterval(() => {
                 sudokuTime++;
                 const m = String(Math.floor(sudokuTime / 60)).padStart(2, '0');
-                const s = String(sudokuTime % 60).padStart(2, '0');
+                const s = String(Math.floor(sudokuTime % 60)).padStart(2, '0');
                 document.getElementById('sudoku-timer').innerText = `${m}:${s}`;
             }, 1000);
         }
@@ -336,7 +392,7 @@
                 const cell = document.createElement('div');
                 const isFixed = puzzleInitial[idx] !== 0;
 
-                let classes = 'sudoku-cell border border-slate-200 flex items-center justify-center text-xl font-medium cursor-pointer select-none bg-white ';
+                let classes = 'sudoku-cell flex items-center justify-center text-xl font-medium cursor-pointer select-none bg-white ';
                 
                 if ((idx + 1) % 3 === 0 && (idx + 1) % 9 !== 0) classes += 'sudoku-border-r ';
                 if (Math.floor(idx / 9) === 2 || Math.floor(idx / 9) === 5) classes += 'sudoku-border-b ';
@@ -371,6 +427,101 @@
             });
         }
 
+        function animateCells(indices) {
+            indices.forEach(idx => {
+                const cell = document.getElementById(`sudoku-c-${idx}`);
+                if (cell) {
+                    cell.classList.remove('cell-completed');
+                    void cell.offsetWidth; // Триггер reflow для перезапуска анимации
+                    cell.classList.add('cell-completed');
+                }
+            });
+        }
+
+        function checkInitialCompletions() {
+            // Регистрируем уже собранные линии при старте без спама анимациями
+            for (let r = 0; r < 9; r++) {
+                let complete = true;
+                for (let c = 0; c < 9; c++) {
+                    if (sudokuCurrentState[r * 9 + c] === 0) complete = false;
+                }
+                if (complete) completedRows.add(r);
+            }
+            for (let c = 0; c < 9; c++) {
+                let complete = true;
+                for (let r = 0; r < 9; r++) {
+                    if (sudokuCurrentState[r * 9 + c] === 0) complete = false;
+                }
+                if (complete) completedCols.add(c);
+            }
+            for (let b = 0; b < 9; b++) {
+                let complete = true;
+                const startRow = Math.floor(b / 3) * 3;
+                const startCol = (b % 3) * 3;
+                for (let r = 0; r < 3; r++) {
+                    for (let c = 0; c < 3; c++) {
+                        if (sudokuCurrentState[(startRow + r) * 9 + (startCol + c)] === 0) complete = false;
+                    }
+                }
+                if (complete) completedBoxes.add(b);
+            }
+        }
+
+        function checkCompletions(placedIdx) {
+            const row = Math.floor(placedIdx / 9);
+            const col = placedIdx % 9;
+            const box = Math.floor(row / 3) * 3 + Math.floor(col / 3);
+
+            // Проверка строки
+            if (!completedRows.has(row)) {
+                let rowComplete = true;
+                const rowIndices = [];
+                for (let c = 0; c < 9; c++) {
+                    const idx = row * 9 + c;
+                    rowIndices.push(idx);
+                    if (sudokuCurrentState[idx] === 0) rowComplete = false;
+                }
+                if (rowComplete) {
+                    completedRows.add(row);
+                    animateCells(rowIndices);
+                }
+            }
+
+            // Проверка столбца
+            if (!completedCols.has(col)) {
+                let colComplete = true;
+                const colIndices = [];
+                for (let r = 0; r < 9; r++) {
+                    const idx = r * 9 + col;
+                    colIndices.push(idx);
+                    if (sudokuCurrentState[idx] === 0) colComplete = false;
+                }
+                if (colComplete) {
+                    completedCols.add(col);
+                    animateCells(colIndices);
+                }
+            }
+
+            // Проверка куба 3x3
+            if (!completedBoxes.has(box)) {
+                let boxComplete = true;
+                const boxIndices = [];
+                const startRow = Math.floor(box / 3) * 3;
+                const startCol = (box % 3) * 3;
+                for (let r = 0; r < 3; r++) {
+                    for (let c = 0; c < 3; c++) {
+                        const idx = (startRow + r) * 9 + (startCol + c);
+                        boxIndices.push(idx);
+                        if (sudokuCurrentState[idx] === 0) boxComplete = false;
+                    }
+                }
+                if (boxComplete) {
+                    completedBoxes.add(box);
+                    animateCells(boxIndices);
+                }
+            }
+        }
+
         function inputSudokuNumber(num) {
             if (sudokuSelectedIdx === null || puzzleInitial[sudokuSelectedIdx] !== 0) return;
 
@@ -382,11 +533,15 @@
                 document.getElementById('sudoku-score').innerText = sudokuScore;
                 renderSudokuBoard();
                 selectSudokuCell(sudokuSelectedIdx);
+                
+                checkCompletions(sudokuSelectedIdx);
 
                 if (!sudokuCurrentState.includes(0)) {
                     clearInterval(sudokuInterval);
-                    alert('Поздравляем! Вы решили Судоку!');
-                    saveScoreToDB(`Sudoku (${currentDifficulty})`, sudokuScore);
+                    setTimeout(() => {
+                        alert('Поздравляем! Вы решили Судоку!');
+                        saveScoreToDB(`Sudoku (${currentDifficulty})`, sudokuScore);
+                    }, 400);
                 }
             } else {
                 sudokuMistakes++;
@@ -410,6 +565,72 @@
             sudokuCurrentState[sudokuSelectedIdx] = 0;
             renderSudokuBoard();
             selectSudokuCell(sudokuSelectedIdx);
+        }
+
+        // ==========================================
+        // ЛОГИКА: ТЕСТ СТРУПА
+        // ==========================================
+        const stroopColors = [
+            { name: 'Красный', color: '#ef4444' },
+            { name: 'Синий', color: '#3b82f6' },
+            { name: 'Зеленый', color: '#10b981' },
+            { name: 'Желтый', color: '#eab308' },
+            { name: 'Фиолетовый', color: '#a855f7' }
+        ];
+
+        let stroopScore = 0;
+        let stroopTimeLeft = 30;
+        let stroopInterval = null;
+        let stroopIsMatch = false;
+
+        function startStroop() {
+            showScreen('stroop-screen');
+            stroopScore = 0;
+            stroopTimeLeft = 30;
+            document.getElementById('stroop-score').innerText = stroopScore;
+            document.getElementById('stroop-timer').innerText = stroopTimeLeft;
+
+            nextStroopRound();
+
+            clearInterval(stroopInterval);
+            stroopInterval = setInterval(() => {
+                stroopTimeLeft--;
+                document.getElementById('stroop-timer').innerText = stroopTimeLeft;
+                if (stroopTimeLeft <= 0) {
+                    clearInterval(stroopInterval);
+                    alert(`Время вышло! Ваш результат: ${stroopScore} очков`);
+                    saveScoreToDB('Stroop Test', stroopScore);
+                    showScreen('main-screen');
+                }
+            }, 1000);
+        }
+
+        function nextStroopRound() {
+            const textObj = stroopColors[Math.floor(Math.random() * stroopColors.length)];
+            
+            stroopIsMatch = Math.random() < 0.5;
+            
+            let colorObj;
+            if (stroopIsMatch) {
+                colorObj = textObj;
+            } else {
+                const otherColors = stroopColors.filter(c => c.name !== textObj.name);
+                colorObj = otherColors[Math.floor(Math.random() * otherColors.length)];
+            }
+
+            const wordEl = document.getElementById('stroop-word');
+            wordEl.innerText = textObj.name;
+            wordEl.style.color = colorObj.color;
+        }
+
+        function answerStroop(userAnswer) {
+            if (userAnswer === stroopIsMatch) {
+                stroopScore += 10;
+            } else {
+                stroopScore = Math.max(0, stroopScore - 5);
+            }
+            document.getElementById('stroop-score').innerText = stroopScore;
+            nextStroopRound();
         }
     </script>
 </body>
