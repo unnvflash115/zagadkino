@@ -16,7 +16,6 @@
         .sudoku-border-r { border-right: 3px solid #334155 !important; }
         .sudoku-border-b { border-bottom: 3px solid #334155 !important; }
 
-        /* Анимация при сборе линии или блока 3х3 */
         @keyframes sudoku-complete {
             0% { transform: scale(1); background-color: #86efac; }
             50% { transform: scale(1.08); background-color: #4ade80; }
@@ -74,7 +73,7 @@
                             <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-semibold">Логика</span>
                         </div>
                         <h3 class="text-xl font-bold mb-1">Судоку</h3>
-                        <p class="text-slate-600 text-sm mb-4">Головоломка с анимацией сбора блоков и линий.</p>
+                        <p class="text-slate-600 text-sm mb-4">Головоломка с анимацией и синтезированной озвучкой.</p>
                     </div>
                     <button onclick="startSudoku()" class="w-full bg-amber-500 text-white py-2.5 rounded-xl font-semibold hover:bg-amber-600 transition">Играть</button>
                 </div>
@@ -87,7 +86,7 @@
                             <span class="bg-purple-100 text-purple-800 text-xs px-2.5 py-1 rounded-full font-semibold">Реакция</span>
                         </div>
                         <h3 class="text-xl font-bold mb-1">Тест Струпа</h3>
-                        <p class="text-slate-600 text-sm mb-4">Совпадает ли цвет текста с его значением?</p>
+                        <p class="text-slate-600 text-sm mb-4">10 расцветок для высокой сложности!</p>
                     </div>
                     <button onclick="startStroop()" class="w-full bg-purple-600 text-white py-2.5 rounded-xl font-semibold hover:bg-purple-700 transition">Играть</button>
                 </div>
@@ -182,6 +181,104 @@
 
     <script>
         // ==========================================
+        // ЗВУКОВОЙ ДВИЖОК (WEB AUDIO API)
+        // ==========================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } 
+            else if (type === 'correct') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.06);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } 
+            else if (type === 'error') {
+                [0, 0.1].forEach(delay => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now + delay);
+                    gain.gain.setValueAtTime(0.2, now + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.08);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + delay);
+                    osc.stop(now + delay + 0.08);
+                });
+            } 
+            else if (type === 'complete') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, index) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.06);
+                    gain.gain.setValueAtTime(0.18, now + index * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.06 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + index * 0.06);
+                    osc.stop(now + index * 0.06 + 0.3);
+                });
+            }
+            else if (type === 'win') {
+                const melody = [
+                    { f: 523.25, t: 0, d: 0.12 },
+                    { f: 659.25, t: 0.12, d: 0.12 },
+                    { f: 783.99, t: 0.24, d: 0.12 },
+                    { f: 1046.50, t: 0.36, d: 0.4 }
+                ];
+                melody.forEach(n => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(n.f, now + n.t);
+                    gain.gain.setValueAtTime(0.25, now + n.t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + n.t);
+                    osc.stop(now + n.t + n.d);
+                });
+            }
+        }
+
+        // ==========================================
         // SUPABASE КОНФИГУРАЦИЯ
         // ==========================================
         const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
@@ -198,6 +295,7 @@
         }
 
         function showScreen(screenId) {
+            playSound('click');
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
             clearInterval(schulteInterval);
@@ -233,15 +331,19 @@
                 btn.innerText = num;
                 btn.onclick = () => {
                     if (num === schulteCurrent) {
+                        playSound('correct');
                         btn.classList.add('opacity-20', 'pointer-events-none');
                         schulteCurrent++;
                         if (schulteCurrent > totalCells) {
                             clearInterval(schulteInterval);
+                            playSound('win');
                             alert(`Победа! Время: ${schulteTime} сек.`);
                             saveScoreToDB(`Schulte ${schulteSize}x${schulteSize}`, schulteTime);
                         } else {
                             document.getElementById('schulte-next').innerText = schulteCurrent;
                         }
+                    } else {
+                        playSound('error');
                     }
                 };
                 board.appendChild(btn);
@@ -257,6 +359,7 @@
         }
 
         function increaseSchulteSize() {
+            playSound('click');
             if (schulteSize < 8) {
                 schulteSize++;
                 startSchulte();
@@ -266,7 +369,7 @@
         }
 
         // ==========================================
-        // ЛОГИКА: СУДОКУ (С АНИМАЦИЯМИ И ФИКСИРОВАННОЙ СЕТКОЙ)
+        // ЛОГИКА: СУДОКУ
         // ==========================================
         let sudokuSelectedIdx = null;
         let sudokuMistakes = 0;
@@ -413,6 +516,7 @@
         }
 
         function selectSudokuCell(idx) {
+            playSound('click');
             sudokuSelectedIdx = idx;
             const row = Math.floor(idx / 9);
             const col = idx % 9;
@@ -432,14 +536,13 @@
                 const cell = document.getElementById(`sudoku-c-${idx}`);
                 if (cell) {
                     cell.classList.remove('cell-completed');
-                    void cell.offsetWidth; // Триггер reflow для перезапуска анимации
+                    void cell.offsetWidth;
                     cell.classList.add('cell-completed');
                 }
             });
         }
 
         function checkInitialCompletions() {
-            // Регистрируем уже собранные линии при старте без спама анимациями
             for (let r = 0; r < 9; r++) {
                 let complete = true;
                 for (let c = 0; c < 9; c++) {
@@ -471,8 +574,8 @@
             const row = Math.floor(placedIdx / 9);
             const col = placedIdx % 9;
             const box = Math.floor(row / 3) * 3 + Math.floor(col / 3);
+            let playCompleteSound = false;
 
-            // Проверка строки
             if (!completedRows.has(row)) {
                 let rowComplete = true;
                 const rowIndices = [];
@@ -484,10 +587,10 @@
                 if (rowComplete) {
                     completedRows.add(row);
                     animateCells(rowIndices);
+                    playCompleteSound = true;
                 }
             }
 
-            // Проверка столбца
             if (!completedCols.has(col)) {
                 let colComplete = true;
                 const colIndices = [];
@@ -499,10 +602,10 @@
                 if (colComplete) {
                     completedCols.add(col);
                     animateCells(colIndices);
+                    playCompleteSound = true;
                 }
             }
 
-            // Проверка куба 3x3
             if (!completedBoxes.has(box)) {
                 let boxComplete = true;
                 const boxIndices = [];
@@ -518,7 +621,12 @@
                 if (boxComplete) {
                     completedBoxes.add(box);
                     animateCells(boxIndices);
+                    playCompleteSound = true;
                 }
+            }
+
+            if (playCompleteSound && sudokuCurrentState.includes(0)) {
+                playSound('complete');
             }
         }
 
@@ -534,16 +642,19 @@
                 renderSudokuBoard();
                 selectSudokuCell(sudokuSelectedIdx);
                 
+                playSound('correct');
                 checkCompletions(sudokuSelectedIdx);
 
                 if (!sudokuCurrentState.includes(0)) {
                     clearInterval(sudokuInterval);
+                    playSound('win');
                     setTimeout(() => {
                         alert('Поздравляем! Вы решили Судоку!');
                         saveScoreToDB(`Sudoku (${currentDifficulty})`, sudokuScore);
                     }, 400);
                 }
             } else {
+                playSound('error');
                 sudokuMistakes++;
                 document.getElementById('sudoku-mistakes').innerText = sudokuMistakes;
                 
@@ -562,20 +673,26 @@
 
         function eraseSudokuCell() {
             if (sudokuSelectedIdx === null || puzzleInitial[sudokuSelectedIdx] !== 0) return;
+            playSound('click');
             sudokuCurrentState[sudokuSelectedIdx] = 0;
             renderSudokuBoard();
             selectSudokuCell(sudokuSelectedIdx);
         }
 
         // ==========================================
-        // ЛОГИКА: ТЕСТ СТРУПА
+        // ЛОГИКА: ТЕСТ СТРУПА (РАСШИРЕННАЯ ПАЛИТРА)
         // ==========================================
         const stroopColors = [
             { name: 'Красный', color: '#ef4444' },
             { name: 'Синий', color: '#3b82f6' },
             { name: 'Зеленый', color: '#10b981' },
             { name: 'Желтый', color: '#eab308' },
-            { name: 'Фиолетовый', color: '#a855f7' }
+            { name: 'Фиолетовый', color: '#a855f7' },
+            { name: 'Оранжевый', color: '#f97316' },
+            { name: 'Розовый', color: '#ec4899' },
+            { name: 'Голубой', color: '#06b6d4' },
+            { name: 'Изумрудный', color: '#059669' },
+            { name: 'Серый', color: '#64748b' }
         ];
 
         let stroopScore = 0;
@@ -598,6 +715,7 @@
                 document.getElementById('stroop-timer').innerText = stroopTimeLeft;
                 if (stroopTimeLeft <= 0) {
                     clearInterval(stroopInterval);
+                    playSound('win');
                     alert(`Время вышло! Ваш результат: ${stroopScore} очков`);
                     saveScoreToDB('Stroop Test', stroopScore);
                     showScreen('main-screen');
@@ -625,8 +743,10 @@
 
         function answerStroop(userAnswer) {
             if (userAnswer === stroopIsMatch) {
+                playSound('correct');
                 stroopScore += 10;
             } else {
+                playSound('error');
                 stroopScore = Math.max(0, stroopScore - 5);
             }
             document.getElementById('stroop-score').innerText = stroopScore;
